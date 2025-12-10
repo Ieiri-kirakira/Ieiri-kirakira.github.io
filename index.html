@@ -1,217 +1,274 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Site</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Meiyo Site</title>
 
 <style>
-/* ===== カラーテーマ ===== */
+/* ------------------------------
+   基本デザイン（ピンク系）
+------------------------------ */
 :root {
-    --bg: #fff;
+    --bg: #ffe4f0;
     --text: #333;
-    --accent: #ff8fba;
-    --card: #ffe3ef;
+    --accent: #ff8ac6;
+    --card: #ffffff;
 }
 
-.dark-mode {
-    --bg: #1f1f1f;
+/* ダークモード用変数 */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #1a1a1a;
+        --text: #f2f2f2;
+        --accent: #ff4da6;
+        --card: #2a2a2a;
+    }
+}
+
+/* 強制ダークモードON */
+:root.dark {
+    --bg: #1a1a1a;
     --text: #f2f2f2;
-    --accent: #ff77b7;
+    --accent: #ff4da6;
     --card: #2a2a2a;
 }
 
-/* ===== 全体 ===== */
+/* 強制ライトモードON */
+:root.light {
+    --bg: #ffe4f0;
+    --text: #333;
+    --accent: #ff8ac6;
+    --card: #ffffff;
+}
+
+/* 全体 */
 body {
     margin: 0;
-    font-family: "Segoe UI", sans-serif;
     background: var(--bg);
     color: var(--text);
-    transition: 0.3s;
+    font-family: "Hiragino Sans", sans-serif;
 }
 
-/* ===== ヘッダー ===== */
+/* ヘッダー */
 header {
     background: var(--accent);
+    padding: 15px;
     color: white;
-    padding: 14px;
-    font-weight: bold;
     text-align: center;
+    font-size: 20px;
 }
 
-/* ===== ダークモードスイッチ ===== */
-.switch-container {
+/* メニュー */
+nav {
+    background: var(--card);
+    padding: 10px;
+    border-bottom: 2px solid var(--accent);
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav li {
+    margin: 6px 0;
+}
+
+/* サブメニュー */
+.submenu {
+    margin-left: 15px;
+    display: none;
+}
+
+.menu-item:hover + .submenu,
+.menu-item:focus + .submenu {
+    display: block;
+}
+
+/* カード */
+.card {
+    background: var(--card);
+    margin: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    border: 2px solid var(--accent);
+}
+
+/* ダーク/ライト切替スイッチ */
+.toggle-container {
     display: flex;
-    justify-content: center;
-    margin: 10px;
+    align-items: center;
+    gap: 10px;
+    margin: 15px;
 }
 
 .switch {
+    width: 50px;
+    height: 25px;
+    background: var(--accent);
+    border-radius: 25px;
     position: relative;
-    width: 58px;
-    height: 28px;
-}
-.switch input {
-    display: none;
-}
-.slider {
-    position: absolute;
-    inset: 0;
-    background: #ccc;
-    border-radius: 30px;
-    transition: .3s;
     cursor: pointer;
 }
-.slider::before {
-    content: "";
-    position: absolute;
-    height: 22px;
-    width: 22px;
-    left: 3px;
-    bottom: 3px;
+
+.knob {
+    width: 21px;
+    height: 21px;
     background: white;
     border-radius: 50%;
-    transition: .3s;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: 0.25s;
 }
-input:checked + .slider {
+
+.switch.on .knob {
+    left: 27px;
+}
+
+/* お題ガチャボタン */
+.gacha-btn {
     background: var(--accent);
-}
-input:checked + .slider::before {
-    transform: translateX(30px);
-}
-
-/* ===== メニュー ===== */
-nav {
-    background: var(--card);
-    padding: 12px;
-}
-
-.menu-item {
-    font-weight: bold;
-    padding: 8px;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
     cursor: pointer;
-}
-
-.submenu {
-    display: none;
-    padding-left: 12px;
-}
-.submenu a {
-    display: block;
-    text-decoration: none;
-    color: var(--text);
-    padding: 4px 0;
-}
-
-.menu-item.open + .submenu {
-    display: block;
-}
-
-/* ===== メイン ===== */
-main {
-    padding: 20px;
-}
-.card {
-    background: var(--card);
-    padding: 20px;
-    border-radius: 10px;
-}
-
-/* ===== フッター ===== */
-footer {
-    text-align: center;
-    font-size: 12px;
-    padding: 20px;
+    font-size: 16px;
 }
 </style>
 </head>
 
 <body>
+<header>Meiyo の創作支援サイト</header>
 
-<header>My Site</header>
-
-<!-- ダークモード切替 -->
-<div class="switch-container">
-    <label class="switch">
-        <input type="checkbox" id="modeToggle">
-        <span class="slider"></span>
-    </label>
+<!-- ダークモードスイッチ -->
+<div class="toggle-container">
+    🌗
+    <div id="themeSwitch" class="switch"><div class="knob"></div></div>
 </div>
 
 <!-- メニュー -->
 <nav>
-    <div class="menu-item" onclick="showHome()">ホーム</div>
+    <ul>
+        <li class="menu-item"><strong>創作活動</strong></li>
+        <ul class="submenu">
+            <li onclick="showPage('gacha')">シュミレーター（お題ガチャ）</li>
+            <li onclick="showPage('dict')">辞書</li>
+            <li onclick="showPage('image')">イメージ記事</li>
+        </ul>
 
-    <div class="menu-item">サイトについて</div>
-    <div class="submenu">
-        <a href="#" onclick="showAbout()">このサイトについて</a>
-    </div>
+        <li class="menu-item"><strong>推し活</strong></li>
+        <ul class="submenu">
+            <li onclick="showPage('oshi')">推し遠征代行サービス</li>
+        </ul>
 
-    <div class="menu-item">創作活動 ▾</div>
-    <div class="submenu">
-        <a href="#" onclick="setContent('シュミレーター')">シュミレーター</a>
-        <a href="#" onclick="setContent('辞書')">辞書</a>
-        <a href="#" onclick="setContent('イメージ記事')">イメージ記事</a>
-    </div>
-
-    <div class="menu-item">推し活 ▾</div>
-    <div class="submenu">
-        <a href="#" onclick="setContent('推し遠征代行サービス')">推し遠征代行サービス</a>
-    </div>
-
-    <div class="menu-item" onclick="showContact()">お問い合わせ</div>
+        <li onclick="showPage('about')">サイトについて</li>
+        <li onclick="showPage('contact')">お問い合わせ</li>
+    </ul>
 </nav>
 
-<main>
-    <div id="content" class="card">
-        ようこそ！<br>
-        メニューから選んでね。
-    </div>
-</main>
+<!-- ▼ 各ページ ▼ -->
 
-<footer>© 2025 My Site</footer>
+<!-- お題ガチャ -->
+<div id="gacha" class="card" style="display:none;">
+    <h2>お題ガチャ</h2>
+
+    <button class="gacha-btn" onclick="rollGacha(1)">お題ガチャ①</button>
+    <p id="result1"></p>
+
+    <button class="gacha-btn" onclick="rollGacha(2)">お題ガチャ②</button>
+    <p id="result2"></p>
+
+    <button class="gacha-btn" onclick="rollGacha(3)">お題ガチャ③</button>
+    <p id="result3"></p>
+</div>
+
+<!-- 辞書 -->
+<div id="dict" class="card" style="display:none;">
+    <h2>辞書</h2>
+    <p>（ここに自由に内容追加できる）</p>
+</div>
+
+<!-- イメージ記事 -->
+<div id="image" class="card" style="display:none;">
+    <h2>イメージ記事</h2>
+    <p>（今後ここに追加）</p>
+</div>
+
+<!-- 推し活 -->
+<div id="oshi" class="card" style="display:none;">
+    <h2>推し遠征代行サービス</h2>
+    <p>（今後内容追加）</p>
+</div>
+
+<!-- サイトについて -->
+<div id="about" class="card" style="display:none;">
+    <h2>サイトについて</h2>
+    <p>
+    本サイトは創作活動や夢活動を支援する目的で、個人が運営しております。  
+    全て個人の趣向･偏見に基づくものであり、それに対するクレーム対応は行っておりません。  
+    趣味の一環として、ご了承下さい。
+    </p>
+</div>
+
+<!-- お問い合わせ -->
+<div id="contact" class="card" style="display:none;">
+    <h2>お問い合わせ</h2>
+    <p>
+        本サイトに関する感想やご要望、バグ報告などあれば  
+        下記のDMまでお問い合わせください♪  
+        <br><br>
+        X（Twitter）：<strong>@sui10b</strong>
+    </p>
+</div>
 
 <script>
-/* ダークモード */
-document.getElementById("modeToggle").addEventListener("change", () => {
-    document.body.classList.toggle("dark-mode");
+/* ------------------------------
+   ページ切り替え
+------------------------------ */
+function showPage(id) {
+    document.querySelectorAll(".card").forEach(c => c.style.display = "none");
+    document.getElementById(id).style.display = "block";
+}
+
+/* ------------------------------
+   お題ガチャ（自由に追加OK）
+------------------------------ */
+const gachaData = {
+    1: ["空を飛ぶ能力", "不思議な指輪", "異世界の扉", "記憶喪失の少年"],
+    2: ["学校で事件発生", "秘密基地", "魔法のスマホ", "謎の手紙"],
+    3: ["雨の日の告白", "図書館での出会い", "昔の友達からの連絡", "夢に出てきた人物"]
+};
+
+function rollGacha(num) {
+    const list = gachaData[num];
+    const result = list[Math.floor(Math.random() * list.length)];
+    document.getElementById(`result${num}`).innerText = "→ " + result;
+}
+
+/* ------------------------------
+   ダークモード切替
+------------------------------ */
+const sw = document.getElementById("themeSwitch");
+
+sw.addEventListener("click", () => {
+    sw.classList.toggle("on");
+    const root = document.documentElement;
+
+    if (root.classList.contains("dark")) {
+        root.classList.remove("dark");
+        root.classList.add("light");
+    } else if (root.classList.contains("light")) {
+        root.classList.remove("light");
+        root.classList.add("dark");
+    } else {
+        root.classList.add("dark");
+    }
 });
-
-/* サブメニュー開閉 */
-document.querySelectorAll(".menu-item").forEach(item => {
-    item.addEventListener("click", () => {
-        item.classList.toggle("open");
-        const next = item.nextElementSibling;
-        if (next && next.classList.contains("submenu")) {
-            next.style.display = next.style.display === "block" ? "none" : "block";
-        }
-    });
-});
-
-/* 表示切替 */
-function setContent(text){
-    document.getElementById("content").innerHTML = `<h2>${text}</h2><p>準備中です。</p>`;
-}
-
-function showContact(){
-    document.getElementById("content").innerHTML = `
-    <h2>お問い合わせ</h2>
-    <p>本サイトに関する感想やご要望、バグ報告などあれば下記DMまでお問い合わせください♪</p>
-    <p>X：<a href="https://x.com/sui10b" target="_blank">@sui10b</a></p>
-    `;
-}
-
-function showHome(){
-    document.getElementById("content").innerHTML = `ようこそ！<br>メニューから選んでね。`;
-}
-
-function showAbout(){
-    document.getElementById("content").innerHTML = `
-    <h2>サイトについて</h2>
-    <p>創作活動と推し活を楽しむためのサイトです。</p>
-    `;
-}
 </script>
 
 </body>
 </html>
+
