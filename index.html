@@ -1,88 +1,101 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>My Site</title>
+<meta charset="UTF-8">
+<title>My Site</title>
+
 <style>
-  body {
+/* ▼ 基本デザイン（ライトモード） */
+body {
     background-color: #ffe6f2; /* ピンク背景 */
     color: #333;
     font-family: sans-serif;
     margin: 20px;
-  }
-
-  /* ダークモード設定（スマホ / PC の設定を自動で読む） */
-  @media (prefers-color-scheme: dark) {
-    body {
-      background-color: #2b2b2b;
-      color: #f7f7f7;
-    }
-  }
-  /* 手動ダークモード（ボタンで切替） */
-.manual-dark {
-  background-color: #2b2b2b !important;
-  color: #f7f7f7 !important;
 }
-  nav ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  gap: 15px;
+
+/* ▼ 自動ダークモード（スマホ/PC の設定を使用） */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #2b2b2b;
+        color: #f7f7f7;
+    }
+}
+
+/* ▼ 手動ダークモード（ボタン切替） */
+.manual-dark {
+    background-color: #2b2b2b !important;
+    color: #f7f7f7 !important;
+}
+
+/* ▼ メニュー（横並び） */
+nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 15px;
 }
 
 nav a {
-  text-decoration: none;
-  color: inherit;
-  font-weight: bold;
-  padding: 6px 10px;
-  border-radius: 5px;
-  background: #ffe0f0; /* ピンク感 */
+    text-decoration: none;
+    color: inherit;
+    font-weight: bold;
+    padding: 6px 10px;
+    border-radius: 5px;
+    background: #ffe0f0; /* ピンク感 */
 }
 
+/* 手動ダークモード時のメニュー */
 .manual-dark nav a {
-  background: #444;
+    background: #444;
 }
+
+/* ▼ ピンクボタン（例：メインボタン） */
 .pink-btn {
-  background-color: #ff92c2;
-  border: none;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
+    background-color: #ff92c2;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
 }
 
 .pink-btn:hover {
-  opacity: 0.8;
+    opacity: 0.8;
 }
 
+/* ダークモード中のピンクボタン色 */
 .manual-dark .pink-btn {
-  background-color: #d86ca6;
+    background-color: #d86ca6;
 }
-
-
 </style>
-</head>
 
+</head>
 <body>
-  <nav>
-  <ul>
-    <li><a href="#">ホーム</a></li>
-    <li><a href="#">プロフィール</a></li>
-    <li><a href="#">ブログ</a></li>
-    <li><a href="#">お問い合わせ</a></li>
-  </ul>
+
+<!-- ▼ メニュー -->
+<nav>
+    <ul>
+        <li><a href="#">ホーム</a></li>
+        <li><a href="#">ブログ</a></li>
+        <li><a href="#">プロフィール</a></li>
+    </ul>
 </nav>
 
-  <h1>Hello World!</h1>
-  <button id="toggle-dark">ダークモード切替</button>
-  <p>サイトできたよ🎉</p>
-  <script>
-  const button = document.getElementById('toggle-dark');
+<h1>ようこそ！</h1>
 
-  button.addEventListener('click', () => {
-    document.body.classList.toggle('manual-dark');
-  });
+<button class="pink-btn">ピンクのボタン</button>
+
+<br><br>
+
+<!-- ▼ ダークモード切替ボタン -->
+<button id="darkToggle" class="pink-btn">ダークモード切替</button>
+
+<script>
+/* ▼ 手動ダークモード切替 */
+document.getElementById("darkToggle").onclick = () => {
+    document.body.classList.toggle("manual-dark");
+};
 </script>
 
 </body>
