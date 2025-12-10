@@ -3,7 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <title>My Site</title>
-</head>
+</head><style>
+  body {
+    background-color: #ffe6f2; /* ピンク背景 */
+    color: #333;
+    font-family: sans-serif;
+    margin: 20px;
+  }
+
+  /* ダークモード設定（スマホ / PC の設定を自動で読む） */
+  @media (prefers-color-scheme: dark) {
+    body {
+      background-color: #2b2b2b;
+      color: #f7f7f7;
+    }
+  }
+</style>
+
 <body>
   <h1>Hello World!</h1>
   <p>サイトできたよ🎉</p>
