@@ -2,100 +2,215 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Site</title>
 
 <style>
-/* ▼ 基本デザイン（ライトモード） */
+/* --- 基本カラー --- */
+:root {
+    --bg: #ffffff;
+    --text: #333;
+    --accent: #ff9ac7;
+    --card: #fff0f6;
+}
+
+/* --- ダークモード時の変数 --- */
+.dark-mode {
+    --bg: #1f1f1f;
+    --text: #f2f2f2;
+    --accent: #ff77b7;
+    --card: #2a2a2a;
+}
+
+/* --- 全体 --- */
 body {
-    background-color: #ffe6f2; /* ピンク背景 */
-    color: #333;
-    font-family: sans-serif;
-    margin: 20px;
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    transition: 0.3s;
 }
 
-/* ▼ 自動ダークモード（スマホ/PC の設定を使用） */
-@media (prefers-color-scheme: dark) {
-    body {
-        background-color: #2b2b2b;
-        color: #f7f7f7;
-    }
-}
-
-/* ▼ 手動ダークモード（ボタン切替） */
-.manual-dark {
-    background-color: #2b2b2b !important;
-    color: #f7f7f7 !important;
-}
-
-/* ▼ メニュー（横並び） */
-nav ul {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    gap: 15px;
-}
-
-nav a {
-    text-decoration: none;
-    color: inherit;
-    font-weight: bold;
-    padding: 6px 10px;
-    border-radius: 5px;
-    background: #ffe0f0; /* ピンク感 */
-}
-
-/* 手動ダークモード時のメニュー */
-.manual-dark nav a {
-    background: #444;
-}
-
-/* ▼ ピンクボタン（例：メインボタン） */
-.pink-btn {
-    background-color: #ff92c2;
-    border: none;
+/* --- ヘッダー --- */
+header {
+    background: var(--accent);
+    padding: 14px;
     color: white;
-    padding: 10px 20px;
-    border-radius: 8px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* --- ダークモードスイッチ（スマホ風） --- */
+.switch-container {
+    display: flex;
+    justify-content: center;
+    margin: 10px auto;
+}
+
+.switch {
+    position: relative;
+    width: 60px;
+    height: 30px;
+}
+
+.switch input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
     cursor: pointer;
-    font-size: 16px;
+    background-color: #ccc;
+    border-radius: 30px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transition: .4s;
 }
 
-.pink-btn:hover {
-    opacity: 0.8;
+.slider:before {
+    content: "";
+    position: absolute;
+    height: 24px;
+    width: 24px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    border-radius: 50%;
+    transition: .4s;
 }
 
-/* ダークモード中のピンクボタン色 */
-.manual-dark .pink-btn {
-    background-color: #d86ca6;
+input:checked + .slider {
+    background-color: var(--accent);
+}
+
+input:checked + .slider:before {
+    transform: translateX(30px);
+}
+
+/* --- メニュー --- */
+nav {
+    background: var(--card);
+    padding: 10px;
+}
+
+.menu-item {
+    margin: 10px 0;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.submenu {
+    display: none;
+    margin-left: 15px;
+}
+
+.submenu a {
+    display: block;
+    margin: 4px 0;
+    color: var(--text);
+    text-decoration: none;
+}
+
+/* メニュークリックで開く */
+.menu-item.open + .submenu {
+    display: block;
+}
+
+/* --- メインカード --- */
+main {
+    padding: 20px;
+}
+
+.card {
+    background: var(--card);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/* --- フッター --- */
+footer {
+    margin-top: 40px;
+    text-align: center;
+    font-size: 12px;
+    padding: 20px;
+    color: var(--text);
 }
 </style>
-
 </head>
+
+
 <body>
 
-<!-- ▼ メニュー -->
+<header>My Site</header>
+
+<!-- ダークモード切り替え -->
+<div class="switch-container">
+    <label class="switch">
+        <input type="checkbox" id="modeToggle">
+        <span class="slider"></span>
+    </label>
+</div>
+
+<!-- メニュー -->
 <nav>
-    <ul>
-        <li><a href="#">ホーム</a></li>
-        <li><a href="#">ブログ</a></li>
-        <li><a href="#">プロフィール</a></li>
-    </ul>
+    <div class="menu-item">サイトについて</div>
+
+    <div class="menu-item">創作活動 ▾</div>
+    <div class="submenu">
+        <a href="#">シュミレーター</a>
+        <a href="#">辞書</a>
+        <a href="#">イメージ記事</a>
+    </div>
+
+    <div class="menu-item">推し活 ▾</div>
+    <div class="submenu">
+        <a href="#">推し遠征代行サービス</a>
+    </div>
+
+    <div class="menu-item">お問い合わせ</div>
 </nav>
 
-<h1>ようこそ！</h1>
+<main>
+    <div class="card" id="content">
+        ようこそ！
+        <br>メニューから好きな項目を選んでね。
+    </div>
+</main>
 
-<button class="pink-btn">ピンクのボタン</button>
+<footer>
+    © 2025 My Site
+</footer>
 
-<br><br>
-
-<!-- ▼ ダークモード切替ボタン -->
-<button id="darkToggle" class="pink-btn">ダークモード切替</button>
 
 <script>
-/* ▼ 手動ダークモード切替 */
-document.getElementById("darkToggle").onclick = () => {
-    document.body.classList.toggle("manual-dark");
-};
+/* --- ダークモード切り替え --- */
+const toggle = document.getElementById("modeToggle");
+toggle.addEventListener("change", () => {
+    document.body.classList.toggle("dark-mode");
+});
+
+/* --- メニュー展開 --- */
+document.querySelectorAll(".menu-item").forEach((item) => {
+    item.addEventListener("click", () => {
+        item.classList.toggle("open");
+        const next = item.nextElementSibling;
+        if (next && next.classList.contains("submenu")) {
+            next.style.display = next.style.display === "block" ? "none" : "block";
+        }
+    });
+});
+
+/* --- お問い合わせタップした時の中身変更 --- */
+document.querySelectorAll(".menu-item")[3].addEventListener("click", () => {
+    document.getElementById("content").innerHTML = `
+        <h2>お問い合わせ</h2>
+        <p>本サイトに関する感想やご要望、バグ報告などあれば下記DMまでお問い合わせください♪</p>
+        <p>X（旧Twitter）: <a href="https://x.com/sui10b" target="_blank">@sui10b</a></p>
+    `;
+});
 </script>
 
 </body>
