@@ -6,15 +6,14 @@
 <title>My Site</title>
 
 <style>
-/* --- 基本カラー --- */
+/* ===== カラーテーマ ===== */
 :root {
-    --bg: #ffffff;
+    --bg: #fff;
     --text: #333;
-    --accent: #ff9ac7;
-    --card: #fff0f6;
+    --accent: #ff8fba;
+    --card: #ffe3ef;
 }
 
-/* --- ダークモード時の変数 --- */
 .dark-mode {
     --bg: #1f1f1f;
     --text: #f2f2f2;
@@ -22,7 +21,7 @@
     --card: #2a2a2a;
 }
 
-/* --- 全体 --- */
+/* ===== 全体 ===== */
 body {
     margin: 0;
     font-family: "Segoe UI", sans-serif;
@@ -31,122 +30,107 @@ body {
     transition: 0.3s;
 }
 
-/* --- ヘッダー --- */
+/* ===== ヘッダー ===== */
 header {
     background: var(--accent);
-    padding: 14px;
     color: white;
-    font-size: 20px;
+    padding: 14px;
     font-weight: bold;
     text-align: center;
 }
 
-/* --- ダークモードスイッチ（スマホ風） --- */
+/* ===== ダークモードスイッチ ===== */
 .switch-container {
     display: flex;
     justify-content: center;
-    margin: 10px auto;
+    margin: 10px;
 }
 
 .switch {
     position: relative;
-    width: 60px;
-    height: 30px;
+    width: 58px;
+    height: 28px;
 }
-
 .switch input {
     display: none;
 }
-
 .slider {
     position: absolute;
-    cursor: pointer;
-    background-color: #ccc;
+    inset: 0;
+    background: #ccc;
     border-radius: 30px;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    transition: .4s;
+    transition: .3s;
+    cursor: pointer;
 }
-
-.slider:before {
+.slider::before {
     content: "";
     position: absolute;
-    height: 24px;
-    width: 24px;
+    height: 22px;
+    width: 22px;
     left: 3px;
     bottom: 3px;
-    background-color: white;
+    background: white;
     border-radius: 50%;
-    transition: .4s;
+    transition: .3s;
 }
-
 input:checked + .slider {
-    background-color: var(--accent);
+    background: var(--accent);
 }
-
-input:checked + .slider:before {
+input:checked + .slider::before {
     transform: translateX(30px);
 }
 
-/* --- メニュー --- */
+/* ===== メニュー ===== */
 nav {
     background: var(--card);
-    padding: 10px;
+    padding: 12px;
 }
 
 .menu-item {
-    margin: 10px 0;
     font-weight: bold;
+    padding: 8px;
     cursor: pointer;
 }
 
 .submenu {
     display: none;
-    margin-left: 15px;
+    padding-left: 12px;
 }
-
 .submenu a {
     display: block;
-    margin: 4px 0;
-    color: var(--text);
     text-decoration: none;
+    color: var(--text);
+    padding: 4px 0;
 }
 
-/* メニュークリックで開く */
 .menu-item.open + .submenu {
     display: block;
 }
 
-/* --- メインカード --- */
+/* ===== メイン ===== */
 main {
     padding: 20px;
 }
-
 .card {
     background: var(--card);
     padding: 20px;
     border-radius: 10px;
 }
 
-/* --- フッター --- */
+/* ===== フッター ===== */
 footer {
-    margin-top: 40px;
     text-align: center;
     font-size: 12px;
     padding: 20px;
-    color: var(--text);
 }
 </style>
 </head>
-
 
 <body>
 
 <header>My Site</header>
 
-<!-- ダークモード切り替え -->
+<!-- ダークモード切替 -->
 <div class="switch-container">
     <label class="switch">
         <input type="checkbox" id="modeToggle">
@@ -156,44 +140,45 @@ footer {
 
 <!-- メニュー -->
 <nav>
+    <div class="menu-item" onclick="showHome()">ホーム</div>
+
     <div class="menu-item">サイトについて</div>
+    <div class="submenu">
+        <a href="#" onclick="showAbout()">このサイトについて</a>
+    </div>
 
     <div class="menu-item">創作活動 ▾</div>
     <div class="submenu">
-        <a href="#">シュミレーター</a>
-        <a href="#">辞書</a>
-        <a href="#">イメージ記事</a>
+        <a href="#" onclick="setContent('シュミレーター')">シュミレーター</a>
+        <a href="#" onclick="setContent('辞書')">辞書</a>
+        <a href="#" onclick="setContent('イメージ記事')">イメージ記事</a>
     </div>
 
     <div class="menu-item">推し活 ▾</div>
     <div class="submenu">
-        <a href="#">推し遠征代行サービス</a>
+        <a href="#" onclick="setContent('推し遠征代行サービス')">推し遠征代行サービス</a>
     </div>
 
-    <div class="menu-item">お問い合わせ</div>
+    <div class="menu-item" onclick="showContact()">お問い合わせ</div>
 </nav>
 
 <main>
-    <div class="card" id="content">
-        ようこそ！
-        <br>メニューから好きな項目を選んでね。
+    <div id="content" class="card">
+        ようこそ！<br>
+        メニューから選んでね。
     </div>
 </main>
 
-<footer>
-    © 2025 My Site
-</footer>
-
+<footer>© 2025 My Site</footer>
 
 <script>
-/* --- ダークモード切り替え --- */
-const toggle = document.getElementById("modeToggle");
-toggle.addEventListener("change", () => {
+/* ダークモード */
+document.getElementById("modeToggle").addEventListener("change", () => {
     document.body.classList.toggle("dark-mode");
 });
 
-/* --- メニュー展開 --- */
-document.querySelectorAll(".menu-item").forEach((item) => {
+/* サブメニュー開閉 */
+document.querySelectorAll(".menu-item").forEach(item => {
     item.addEventListener("click", () => {
         item.classList.toggle("open");
         const next = item.nextElementSibling;
@@ -203,14 +188,29 @@ document.querySelectorAll(".menu-item").forEach((item) => {
     });
 });
 
-/* --- お問い合わせタップした時の中身変更 --- */
-document.querySelectorAll(".menu-item")[3].addEventListener("click", () => {
+/* 表示切替 */
+function setContent(text){
+    document.getElementById("content").innerHTML = `<h2>${text}</h2><p>準備中です。</p>`;
+}
+
+function showContact(){
     document.getElementById("content").innerHTML = `
-        <h2>お問い合わせ</h2>
-        <p>本サイトに関する感想やご要望、バグ報告などあれば下記DMまでお問い合わせください♪</p>
-        <p>X（旧Twitter）: <a href="https://x.com/sui10b" target="_blank">@sui10b</a></p>
+    <h2>お問い合わせ</h2>
+    <p>本サイトに関する感想やご要望、バグ報告などあれば下記DMまでお問い合わせください♪</p>
+    <p>X：<a href="https://x.com/sui10b" target="_blank">@sui10b</a></p>
     `;
-});
+}
+
+function showHome(){
+    document.getElementById("content").innerHTML = `ようこそ！<br>メニューから選んでね。`;
+}
+
+function showAbout(){
+    document.getElementById("content").innerHTML = `
+    <h2>サイトについて</h2>
+    <p>創作活動と推し活を楽しむためのサイトです。</p>
+    `;
+}
 </script>
 
 </body>
