@@ -18,11 +18,72 @@
       color: #f7f7f7;
     }
   }
+  /* 手動ダークモード（ボタンで切替） */
+.manual-dark {
+  background-color: #2b2b2b !important;
+  color: #f7f7f7 !important;
+}
+  nav ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  gap: 15px;
+}
+
+nav a {
+  text-decoration: none;
+  color: inherit;
+  font-weight: bold;
+  padding: 6px 10px;
+  border-radius: 5px;
+  background: #ffe0f0; /* ピンク感 */
+}
+
+.manual-dark nav a {
+  background: #444;
+}
+.pink-btn {
+  background-color: #ff92c2;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.pink-btn:hover {
+  opacity: 0.8;
+}
+
+.manual-dark .pink-btn {
+  background-color: #d86ca6;
+}
+
+
 </style>
 </head>
 
 <body>
+  <nav>
+  <ul>
+    <li><a href="#">ホーム</a></li>
+    <li><a href="#">プロフィール</a></li>
+    <li><a href="#">ブログ</a></li>
+    <li><a href="#">お問い合わせ</a></li>
+  </ul>
+</nav>
+
   <h1>Hello World!</h1>
+  <button id="toggle-dark">ダークモード切替</button>
   <p>サイトできたよ🎉</p>
+  <script>
+  const button = document.getElementById('toggle-dark');
+
+  button.addEventListener('click', () => {
+    document.body.classList.toggle('manual-dark');
+  });
+</script>
+
 </body>
 </html>
