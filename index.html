@@ -1,326 +1,164 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <title>(切り株)キラキラ創作人生</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- タイトル（ブラウザ上部に出るやつ） -->
-    <title>(切り株)キラキラ創作人生</title>
+  <!-- 姫フォント：Noto Serif JP Bold 700 -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet">
 
-    <!-- 姫フォント（KraftMincho） -->
-    <link href="https://fonts.googleapis.com/css2?family=KraftMincho:wght@700&display=swap" rel="stylesheet">
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
+    import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
 
-    <style>
-        /* ------------------------------
-            ベースデザイン
-        ------------------------------ */
-        body {
-            margin: 0;
-            font-family: "Hiragino Sans", "Noto Sans JP", sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            transition: 0.3s;
-        }
+    const firebaseConfig = {
+      apiKey: "AIzaSyD2G7dG5o6Z2JMdMY6mJfrrCe8mbuzxyl0",
+      authDomain: "site-9ecf7.firebaseapp.com",
+      projectId: "site-9ecf7",
+      storageBucket: "site-9ecf7.firebasestorage.app",
+      messagingSenderId: "130132247796",
+      appId: "1:130132247796:web:321f37a5ae0345b9308aa1",
+      measurementId: "G-M2DV58RNVE"
+    };
 
-        :root {
-            --pink: #ff9acb;
-            --bg: #fff;
-            --text: #333;
-            --menu-bg: #ffe5f2;
-        }
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getDatabase(app);
 
-        .dark {
-            --bg: #1e1e1e;
-            --text: #f5f5f5;
-            --menu-bg: #333;
-        }
+    // ---- 閲覧数カウンター ----
+    const viewRef = ref(db, "views/count");
+    onValue(viewRef, (snapshot) => {
+      const v = snapshot.val() ?? 0;
+      document.getElementById("view-counter").textContent = v;
+      set(viewRef, v + 1);
+    });
+  </script>
 
-        /* タイトル（姫フォント適用） */
-        h1.title {
-            font-family: "KraftMincho", serif;
-            font-size: 28px;
-            font-weight: 700;
-            padding: 15px;
-            color: var(--text);
-            text-align: center;
-        }
+  <style>
+    body {
+      font-family: "Noto Serif JP", serif;
+      margin: 0;
+      background: #fff;
+    }
 
-        /* ------------------------------
-            ダークモードスイッチ
-        ------------------------------ */
-        .toggle-container {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            cursor: pointer;
-        }
+    header {
+      background: #ffe8f5;
+      padding: 20px;
+      text-align: center;
+      font-size: 32px;
+      color: #d6007f;
+      font-weight: 700;
+      border-bottom: 2px solid #ffb6d9;
+    }
 
-        .toggle-container span {
-            font-size: 20px;
-        }
+    /* メニュー */
+    nav {
+      background: #ffddf0;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
 
-        .toggle-btn {
-            width: 45px;
-            height: 22px;
-            background: #ccc;
-            border-radius: 50px;
-            position: relative;
-            transition: 0.3s;
-        }
+    nav a {
+      color: #c7006b;
+      text-decoration: none;
+      padding: 8px 16px;
+      background: #fff;
+      border-radius: 8px;
+      border: 1px solid #ff9ac9;
+      transition: 0.2s;
+    }
 
-        .toggle-btn::after {
-            content: "";
-            width: 18px;
-            height: 18px;
-            background: white;
-            border-radius: 50%;
-            position: absolute;
-            top: 2px;
-            left: 3px;
-            transition: 0.3s;
-        }
+    nav a:hover {
+      background: #ffecf7;
+    }
 
-        .dark .toggle-btn {
-            background: #777;
-        }
-
-        .dark .toggle-btn::after {
-            left: 23px;
-        }
-
-        /* ------------------------------
-            メニュー
-        ------------------------------ */
-        nav {
-            background: var(--menu-bg);
-            padding: 10px;
-        }
-
-        nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            gap: 20px;
-        }
-
-        nav li {
-            position: relative;
-            cursor: pointer;
-        }
-
-        /* サブメニュー */
-        nav li ul {
-            display: none;
-            position: absolute;
-            background: var(--menu-bg);
-            padding: 10px;
-            top: 22px;
-            left: 0;
-            border-radius: 6px;
-        }
-
-        nav li:hover ul {
-            display: block;
-        }
-
-        nav li ul li {
-            padding: 5px 0;
-            white-space: nowrap;
-        }
-
-        nav li ul li a {
-            text-decoration: none;
-            color: var(--text);
-        }
-
-        /* ------------------------------
-            ここにページ内容を書ける
-        ------------------------------ */
-        .content {
-            padding: 20px;
-        }
-    </style>
+    /* 閲覧数表示（右下） */
+    #view-counter-box {
+      position: fixed;
+      right: 10px;
+      bottom: 10px;
+      background: rgba(255, 200, 230, 0.8);
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      color: #a3005a;
+    }
+  </style>
 </head>
 
 <body>
-    <h2>お題ガチャ①（創作用）</h2>
-<button onclick="draw('gacha1')">まわす！</button>
-<p id="gacha1-result"></p>
+  <header>(切り株)キラキラ創作人生</header>
 
-<h2>お題ガチャ②（恋愛系）</h2>
-<button onclick="draw('gacha2')">まわす！</button>
-<p id="gacha2-result"></p>
+  <nav>
+    <a href="index.html">ホーム</a>
+    <a href="gacha.html">シミュレーション（ガチャ）</a>
+  </nav>
 
-<script>
-  const gachas = {
-    gacha1: [
-      "魔法少女の日常",
-      "不思議な出会い",
-      "運命の分岐点",
-      "仲間との絆",
-      "戦う理由"
-    ],
-    gacha2: [
-      "初恋のきっかけ",
-      "すれ違い",
-      "秘密の約束",
-      "遠距離恋愛",
-      "告白シーン"
-    ]
-  };
+  <main style="padding:20px;">
+    <h2>ようこそ！</h2>
+    <p>ここは創作活動を応援するサイトです💖</p>
+  </main>
 
-  function draw(gachaName) {
-    const list = gachas[gachaName];
-    const item = list[Math.floor(Math.random() * list.length)];
-    document.getElementById(gachaName + "-result").textContent = "結果：" + item;
-  }
-</script>
+  <!-- 閲覧数 -->
+  <div id="view-counter-box">
+    👀 <span id="view-counter">0</span> views
+  </div>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>お題ガチャ - キラキラ創作人生</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-
-    <!-- ダークモードスイッチ -->
-    <div class="toggle-container" onclick="toggleDark()">
-        <span>🌞</span>
-        <div class="toggle-btn"></div>
-    </div>
-
-    <!-- タイトル -->
-    <h1 class="title">(切り株)キラキラ創作人生</h1>
-
-    <!-- メニュー -->
-    <nav>
-        <ul>
-            <li>創作活動
-                <ul>
-                    <li><a href="#">シュミレーター（お題ガチャ）</a></li>
-                    <li><a href="#">辞書</a></li>
-                    <li><a href="#">イメージ記事</a></li>
-                </ul>
-            </li>
-
-            <li>推し活
-                <ul>
-                    <li><a href="#">推し遠征代行サービス</a></li>
-                </ul>
-            </li>
-
-            <li><a href="#">サイトについて</a></li>
-            <li><a href="#">お問い合わせ</a></li>
-        </ul>
-    </nav>
-
-    <div class="content">
-        ※ここから下に内容を書けます
-    </div>
-
-    <script>
-        /* ダークモード切り替え */
-        function toggleDark() {
-            document.body.classList.toggle('dark');
-        }
-    </script>
-
-    <div id="view-counter" style="
-    position: fixed;
-    bottom: 5px;
-    right: 10px;
-    font-size: 12px;
-    color: #888;">
-</div>
-
-<script>
-  function updateViewCount() {
-    let count = localStorage.getItem("view_count");
-
-    if (!count) count = 0;
-    count = Number(count) + 1;
-
-    localStorage.setItem("view_count", count);
-    document.getElementById("view-counter").textContent =
-      "view：" + count;
-  }
-  updateViewCount();
-</script>
-
-    <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyD2G7dG5o6Z2JMdMY6mJfrrCe8mbuzxyl0",
-    authDomain: "site-9ecf7.firebaseapp.com",
-    projectId: "site-9ecf7",
-    storageBucket: "site-9ecf7.firebasestorage.app",
-    messagingSenderId: "130132247796",
-    appId: "1:130132247796:web:321f37a5ae0345b9308aa1",
-    measurementId: "G-M2DV58RNVE"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
-    <!-- ===== 閲覧数リアルタイムカウンター ===== -->
-<div id="viewCounter" style="
-  position: fixed;
-  right: 10px;
-  bottom: 10px;
-  background: rgba(255,255,255,0.8);
-  padding: 5px 12px;
-  border-radius: 8px;
-  font-size: 12px;
-  z-index: 9999;
-  box-shadow: 0 0 5px rgba(0,0,0,0.2);
-">
-  読み込み中…
-</div>
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
-  import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot } 
-    from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyD2G7dG5o6Z2JMdMY6mJfrrCe8mbuzxyl0",
-    authDomain: "site-9ecf7.firebaseapp.com",
-    projectId: "site-9ecf7",
-    storageBucket: "site-9ecf7.firebasestorage.app",
-    messagingSenderId: "130132247796",
-    appId: "1:130132247796:web:321f37a5ae0345b9308aa1",
-    measurementId: "G-M2DV58RNVE"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-  const db = getFirestore(app);
-
-  const counterRef = doc(db, "siteData", "viewCount");
-
-  async function addView() {
-    const snap = await getDoc(counterRef);
-
-    if (snap.exists()) {
-      await updateDoc(counterRef, {
-        count: snap.data().count + 1
-      });
-    } else {
-      await setDoc(counterRef, { count: 1 });
+  <style>
+    body { font-family: "Noto Serif JP", serif; padding:20px; }
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      border-radius: 10px;
+      border: none;
+      background: #ff7dbb;
+      color: #fff;
+      cursor: pointer;
     }
-  }
-
-  onSnapshot(counterRef, (docSnap) => {
-    if (docSnap.exists()) {
-      document.getElementById("viewCounter").textContent =
-        "閲覧数：" + docSnap.data().count;
+    #result {
+      margin-top: 20px;
+      font-size: 24px;
+      color: #d6007f;
+      font-weight: bold;
     }
-  });
+  </style>
 
-  addView();
-</script>
+  <script>
+    const items = [
+      "幼馴染が突然の告白！？",
+      "魔法が暴発してとんでもない展開に…",
+      "雨の日に二人きりの部屋で…",
+      "ライバルとまさかの共闘！？"
+    ];
 
+    function rollGacha() {
+      const r = items[Math.floor(Math.random() * items.length)];
+      document.getElementById("result").textContent = r;
+    }
+  </script>
+</head>
 
+<body>
+  <h1>お題ガチャ</h1>
+  <p>ボタンを押してランダムお題をゲットしよう！</p>
+
+  <button onclick="rollGacha()">ガチャを回す🎀</button>
+
+  <div id="result"></div>
+
+  <p style="margin-top:20px;"><a href="index.html">← ホームに戻る</a></p>
 </body>
 </html>
