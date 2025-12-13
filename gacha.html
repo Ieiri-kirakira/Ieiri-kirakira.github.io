@@ -1,1 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>お題ガチャ - キラキラ創作人生</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: "Noto Serif JP", serif;
+      padding:20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      border-radius: 10px;
+      border: none;
+      background: #ff7dbb;
+      color: #fff;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 24px;
+      color: #d6007f;
+      font-weight: bold;
+    }
+  </style>
+
+  <script>
+    const items = [
+      "幼馴染が突然の告白！？",
+      "魔法が暴発してとんでもない展開に…",
+      "雨の日に二人きりの部屋で…",
+      "ライバルとまさかの共闘！？"
+    ];
+
+    function rollGacha() {
+      const r = items[Math.floor(Math.random() * items.length)];
+      document.getElementById("result").textContent = r;
+    }
+  </script>
+</head>
+
+<body>
+  <h1>お題ガチャ</h1>
+  <p>ボタンを押してランダムお題をゲットしよう！</p>
+
+  <button onclick="rollGacha()">ガチャを回す🎀</button>
+
+  <div id="result"></div>
+
+  <p style="margin-top:20px;">
+    <a href="index.html">← ホームに戻る</a>
+  </p>
+</body>
+</html>
