@@ -147,6 +147,39 @@
 </head>
 
 <body>
+    <h2>お題ガチャ①（創作用）</h2>
+<button onclick="draw('gacha1')">まわす！</button>
+<p id="gacha1-result"></p>
+
+<h2>お題ガチャ②（恋愛系）</h2>
+<button onclick="draw('gacha2')">まわす！</button>
+<p id="gacha2-result"></p>
+
+<script>
+  const gachas = {
+    gacha1: [
+      "魔法少女の日常",
+      "不思議な出会い",
+      "運命の分岐点",
+      "仲間との絆",
+      "戦う理由"
+    ],
+    gacha2: [
+      "初恋のきっかけ",
+      "すれ違い",
+      "秘密の約束",
+      "遠距離恋愛",
+      "告白シーン"
+    ]
+  };
+
+  function draw(gachaName) {
+    const list = gachas[gachaName];
+    const item = list[Math.floor(Math.random() * list.length)];
+    document.getElementById(gachaName + "-result").textContent = "結果：" + item;
+  }
+</script>
+
 
     <!-- ダークモードスイッチ -->
     <div class="toggle-container" onclick="toggleDark()">
@@ -189,6 +222,28 @@
             document.body.classList.toggle('dark');
         }
     </script>
+
+    <div id="view-counter" style="
+    position: fixed;
+    bottom: 5px;
+    right: 10px;
+    font-size: 12px;
+    color: #888;">
+</div>
+
+<script>
+  function updateViewCount() {
+    let count = localStorage.getItem("view_count");
+
+    if (!count) count = 0;
+    count = Number(count) + 1;
+
+    localStorage.setItem("view_count", count);
+    document.getElementById("view-counter").textContent =
+      "view：" + count;
+  }
+  updateViewCount();
+</script>
 
 </body>
 </html>
