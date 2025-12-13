@@ -1,229 +1,194 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>(切り株)キラキラ創作人生</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-/* ------------------------------
-   ベースデザイン
------------------------------- */
-body {
-  margin: 0;
-  font-family: "Hiragino Sans", "Noto Sans JP", sans-serif;
-  background-color: var(--bg);
-  color: var(--text);
-  transition: 0.3s;
-}
+    <!-- タイトル（ブラウザ上部に出るやつ） -->
+    <title>(切り株)キラキラ創作人生</title>
 
-:root {
-  --pink: #ff9acb;
-  --bg: #fff;
-  --text: #333;
-  --menu-bg: #ffe5f2;
-}
+    <!-- 姫フォント（KraftMincho） -->
+    <link href="https://fonts.googleapis.com/css2?family=KraftMincho:wght@700&display=swap" rel="stylesheet">
 
-.dark {
-  --bg: #1e1e1e;
-  --text: #f5f5f5;
-  --menu-bg: #333;
-}
+    <style>
+        /* ------------------------------
+            ベースデザイン
+        ------------------------------ */
+        body {
+            margin: 0;
+            font-family: "Hiragino Sans", "Noto Sans JP", sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            transition: 0.3s;
+        }
 
-/* ヘッダー */
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 20px;
-  background-color: var(--pink);
-  color: #fff;
-  position: sticky;
-  top: 0;
-}
+        :root {
+            --pink: #ff9acb;
+            --bg: #fff;
+            --text: #333;
+            --menu-bg: #ffe5f2;
+        }
 
-/* ダークモードスイッチ（太陽アイコン付き） */
-.switch-area {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  user-select: none;
-}
+        .dark {
+            --bg: #1e1e1e;
+            --text: #f5f5f5;
+            --menu-bg: #333;
+        }
 
-.switch-area span {
-  font-size: 18px;
-}
+        /* タイトル（姫フォント適用） */
+        h1.title {
+            font-family: "KraftMincho", serif;
+            font-size: 28px;
+            font-weight: 700;
+            padding: 15px;
+            color: var(--text);
+            text-align: center;
+        }
 
-.switch {
-  width: 40px;
-  height: 22px;
-  background: #ccc;
-  border-radius: 20px;
-  position: relative;
-  transition: 0.3s;
-}
+        /* ------------------------------
+            ダークモードスイッチ
+        ------------------------------ */
+        .toggle-container {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
 
-.switch::before {
-  content: "";
-  width: 18px;
-  height: 18px;
-  background: #fff;
-  border-radius: 50%;
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  transition: 0.3s;
-}
+        .toggle-container span {
+            font-size: 20px;
+        }
 
-.dark .switch {
-  background: #888;
-}
+        .toggle-btn {
+            width: 45px;
+            height: 22px;
+            background: #ccc;
+            border-radius: 50px;
+            position: relative;
+            transition: 0.3s;
+        }
 
-.dark .switch::before {
-  transform: translateX(18px);
-}
+        .toggle-btn::after {
+            content: "";
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 3px;
+            transition: 0.3s;
+        }
 
-/* ------------------------------
-   メニュー
------------------------------- */
-nav {
-  width: 220px;
-  background: var(--menu-bg);
-  height: 100vh;
-  padding: 20px;
-  box-sizing: border-box;
-  position: fixed;
-  top: 60px;
-  left: 0;
-  overflow-y: auto;
-}
+        .dark .toggle-btn {
+            background: #777;
+        }
 
-nav h3 {
-  padding: 8px 0;
-  margin-bottom: 6px;
-  border-bottom: 1px solid #aaa;
-}
+        .dark .toggle-btn::after {
+            left: 23px;
+        }
 
-.menu-item {
-  margin: 8px 0;
-  cursor: pointer;
-}
+        /* ------------------------------
+            メニュー
+        ------------------------------ */
+        nav {
+            background: var(--menu-bg);
+            padding: 10px;
+        }
 
-.submenu {
-  margin-left: 12px;
-  display: none;
-}
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 20px;
+        }
 
-.menu-item:hover .submenu {
-  display: block;
-}
+        nav li {
+            position: relative;
+            cursor: pointer;
+        }
 
-a {
-  color: var(--text);
-  text-decoration: none;
-  display: block;
-  padding: 4px 0;
-}
+        /* サブメニュー */
+        nav li ul {
+            display: none;
+            position: absolute;
+            background: var(--menu-bg);
+            padding: 10px;
+            top: 22px;
+            left: 0;
+            border-radius: 6px;
+        }
 
-/* ------------------------------
-   メイン
------------------------------- */
-main {
-  margin-left: 260px;
-  padding: 20px;
-}
-</style>
+        nav li:hover ul {
+            display: block;
+        }
+
+        nav li ul li {
+            padding: 5px 0;
+            white-space: nowrap;
+        }
+
+        nav li ul li a {
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        /* ------------------------------
+            ここにページ内容を書ける
+        ------------------------------ */
+        .content {
+            padding: 20px;
+        }
+    </style>
 </head>
 
 <body>
 
-<header>
-  <h2>(切り株)キラキラ創作人生</h2>
-
-  <!-- ダークモードスイッチ -->
-  <div class="switch-area" id="modeSwitch">
-    <span>☀️</span>
-    <div class="switch"></div>
-  </div>
-</header>
-
-<!-- メニュー -->
-<nav>
-  <h3>サイトについて</h3>
-  <p style="font-size:14px;">
-    本サイトは創作活動や夢活動を応援する目的で、個人が運営しております。<br>
-    全て個人の趣向･偏見に基づくものであり、それに対するクレーム対応は行っておりません。<br>
-    趣味の一環として、ご了承下さい。
-  </p>
-
-  <h3>メニュー</h3>
-
-  <div class="menu-item">
-    創作活動
-    <div class="submenu">
-      <a href="#sim">シュミレーター（お題ガチャ）</a>
-      <a href="#dict">辞書</a>
-      <a href="#img">イメージ記事</a>
+    <!-- ダークモードスイッチ -->
+    <div class="toggle-container" onclick="toggleDark()">
+        <span>🌞</span>
+        <div class="toggle-btn"></div>
     </div>
-  </div>
 
-  <div class="menu-item">
-    推し活
-    <div class="submenu">
-      <a href="#oshi">推し遠征代行サービス</a>
+    <!-- タイトル -->
+    <h1 class="title">(切り株)キラキラ創作人生</h1>
+
+    <!-- メニュー -->
+    <nav>
+        <ul>
+            <li>創作活動
+                <ul>
+                    <li><a href="#">シュミレーター（お題ガチャ）</a></li>
+                    <li><a href="#">辞書</a></li>
+                    <li><a href="#">イメージ記事</a></li>
+                </ul>
+            </li>
+
+            <li>推し活
+                <ul>
+                    <li><a href="#">推し遠征代行サービス</a></li>
+                </ul>
+            </li>
+
+            <li><a href="#">サイトについて</a></li>
+            <li><a href="#">お問い合わせ</a></li>
+        </ul>
+    </nav>
+
+    <div class="content">
+        ※ここから下に内容を書けます
     </div>
-  </div>
 
-  <div class="menu-item">
-    <a href="#contact">お問い合わせ</a>
-  </div>
-</nav>
-
-<!-- メインコンテンツ -->
-<main>
-  <h1>ようこそ！</h1>
-  <p>サイトのメインページです。</p>
-
-  <section id="sim">
-    <h2>シュミレーター（お題ガチャ）</h2>
-    <button onclick="gacha()">お題を引く！</button>
-    <p id="gachaResult" style="font-size:20px; margin-top:12px;"></p>
-  </section>
-
-  <section id="contact" style="margin-top:40px;">
-    <h2>お問い合わせ</h2>
-    <p>本サイトに関する感想やご要望、バグ報告などあれば下記DMまでお問い合わせください♪<br>
-    X（旧Twitter）：<b>@sui10b</b></p>
-  </section>
-</main>
-
-<script>
-/* ------------------------------
-   ダークモード切替
------------------------------- */
-document.getElementById("modeSwitch").onclick = () => {
-  document.body.classList.toggle("dark");
-};
-
-/* ------------------------------
-   お題ガチャ
------------------------------- */
-const themes = [
-  "幼馴染と雨宿り",
-  "不思議な生き物と遭遇",
-  "初恋の再会",
-  "失われた記憶",
-  "異世界からの手紙",
-  "ツンデレとの会話",
-  "選ばれし者の試練"
-];
-
-function gacha() {
-  const r = Math.floor(Math.random() * themes.length);
-  document.getElementById("gachaResult").textContent = themes[r];
-}
-</script>
+    <script>
+        /* ダークモード切り替え */
+        function toggleDark() {
+            document.body.classList.toggle('dark');
+        }
+    </script>
 
 </body>
 </html>
