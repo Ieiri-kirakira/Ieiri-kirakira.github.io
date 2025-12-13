@@ -245,5 +245,23 @@
   updateViewCount();
 </script>
 
+    <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD2G7dG5o6Z2JMdMY6mJfrrCe8mbuzxyl0",
+    authDomain: "site-9ecf7.firebaseapp.com",
+    projectId: "site-9ecf7",
+    storageBucket: "site-9ecf7.firebasestorage.app",
+    messagingSenderId: "130132247796",
+    appId: "1:130132247796:web:321f37a5ae0345b9308aa1",
+    measurementId: "G-M2DV58RNVE"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+
 </body>
 </html>
