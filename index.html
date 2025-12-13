@@ -262,6 +262,65 @@
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
 </script>
+    <!-- ===== 閲覧数リアルタイムカウンター ===== -->
+<div id="viewCounter" style="
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+  background: rgba(255,255,255,0.8);
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  z-index: 9999;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+">
+  読み込み中…
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
+  import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot } 
+    from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD2G7dG5o6Z2JMdMY6mJfrrCe8mbuzxyl0",
+    authDomain: "site-9ecf7.firebaseapp.com",
+    projectId: "site-9ecf7",
+    storageBucket: "site-9ecf7.firebasestorage.app",
+    messagingSenderId: "130132247796",
+    appId: "1:130132247796:web:321f37a5ae0345b9308aa1",
+    measurementId: "G-M2DV58RNVE"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const db = getFirestore(app);
+
+  const counterRef = doc(db, "siteData", "viewCount");
+
+  async function addView() {
+    const snap = await getDoc(counterRef);
+
+    if (snap.exists()) {
+      await updateDoc(counterRef, {
+        count: snap.data().count + 1
+      });
+    } else {
+      await setDoc(counterRef, { count: 1 });
+    }
+  }
+
+  onSnapshot(counterRef, (docSnap) => {
+    if (docSnap.exists()) {
+      document.getElementById("viewCounter").textContent =
+        "閲覧数：" + docSnap.data().count;
+    }
+  });
+
+  addView();
+</script>
+
 
 </body>
 </html>
