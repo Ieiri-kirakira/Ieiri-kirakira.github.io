@@ -135,6 +135,58 @@
   margin-bottom: 80px;  /* 好きな数字で調整できる */
 }
 
+    /* ===== スマホ版だけに反映（幅600px以下） ===== */
+@media screen and (max-width: 600px) {
+
+  header {
+    font-size: 24px;
+    padding: 16px;
+  }
+
+  nav {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 8px;
+  }
+
+  nav a {
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+
+  main {
+    padding: 0 12px;
+  }
+
+  h2 {
+    font-size: 20px;
+    line-height: 1.5;
+  }
+
+  .section-block {
+    margin-bottom: 45px; /* スマホでブロックの余白を広く */
+  }
+
+  .section-block h3, 
+  .section-block h4 {
+    font-size: 18px;
+  }
+
+  .section-block p {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* 閲覧数のバッジを小さめに */
+  #view-counter-box {
+    font-size: 10px;
+    padding: 4px 8px;
+    right: 6px;
+    bottom: 6px;
+  }
+}
+
+
   </style>
 
 </head>
