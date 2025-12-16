@@ -37,148 +37,173 @@
     });
   </script>
 
+  <!-- 基本デザイン -->
   <style>
     body {
       font-family: "Noto Serif JP", serif;
       margin: 0;
       background: #fff;
     }
+
     header {
       background: #ffe8f5;
-      padding: 20px;
+      padding: 22px;
       text-align: center;
       font-size: 32px;
       color: #d6007f;
       font-weight: 700;
       border-bottom: 2px solid #ffb6d9;
     }
+
     /* メニュー */
     nav {
       background: #ffddf0;
-      padding: 10px;
+      padding: 12px;
       display: flex;
       justify-content: center;
-      gap: 20px;
+      flex-wrap: wrap;
+      gap: 18px;
     }
     nav a {
       color: #c7006b;
       text-decoration: none;
       padding: 8px 16px;
-      background: #fff;
+      background: #ffffff;
       border-radius: 8px;
       border: 1px solid #ff9ac9;
       transition: 0.2s;
+      font-size: 15px;
     }
     nav a:hover {
       background: #ffecf7;
     }
-    /* 閲覧数表示（右下） */
+
+    /* 閲覧数（右下固定） */
     #view-counter-box {
       position: fixed;
-      right: 10px;
-      bottom: 10px;
-      background: rgba(255, 200, 230, 0.8);
-      padding: 5px 10px;
+      right: 12px;
+      bottom: 12px;
+      background: rgba(255, 200, 230, 0.85);
+      padding: 6px 12px;
       border-radius: 8px;
-      font-size: 12px;
+      font-size: 13px;
       color: #a3005a;
     }
   </style>
+
+  <!-- トップページ専用スタイル -->
   <style>
-  /* トップページ専用 */
-  .home-content .block {
-    margin-top: 30px;
-  }
-  .home-content h3 {
-    margin-bottom: 20px;
-  }
-  .home-content h4 {
-    margin: 25px 0 5px 0;  /* 小見出しの上下調整（本文との距離を詰める） */
-  }
-  .home-content p {
-    margin: 0 0 20px 0; /* ブロック間を少し広く */
-    line-height: 1.7;
-  }
-</style>
+    main.home-blocks {
+      padding: 25px 22px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    main.home-blocks h2 {
+      text-align: center;
+      color: #d6007f;
+      margin-bottom: 40px;
+      font-size: 26px;
+    }
+
+    .section-block {
+      margin-bottom: 55px; /* ← ブロック同士の余白をかなり広く */
+    }
+
+    .section-block h3 {
+      font-size: 22px;
+      margin-bottom: 18px;
+      color: #c7006b;
+      border-left: 6px solid #ffb6d9;
+      padding-left: 10px;
+    }
+
+    .section-block h4 {
+      margin: 0 0 8px 0; /* 小見出しと本文の距離を詰める */
+      color: #d6007f;
+      font-size: 20px;
+    }
+
+    .section-block p {
+      margin: 0;
+      padding-left: 10px;
+      line-height: 1.75;
+      color: #444;
+    }
+  </style>
 
 </head>
 
+
 <body>
+
   <header>(切り株)キラキラ創作人生</header>
 
   <nav>
-<nav>
-  <a href="index.html">ホーム</a>
-  <a href="inspiration.html">インスピレーション</a>
-  <a href="gacha.html">シミュレーション（ガチャ）</a>
-  <a href="yume.html">夢日記</a>
-  <a href="oshi.html">推し活</a>
-  <a href="booth.html">BOOTH</a>
-  <a href="contact.html">お問い合わせ</a>
-</nav>
-
+    <a href="index.html">ホーム</a>
+    <a href="inspiration.html">インスピレーション</a>
+    <a href="gacha.html">シミュレーション（ガチャ）</a>
+    <a href="yume.html">夢日記</a>
+    <a href="oshi.html">推し活</a>
+    <a href="booth.html">BOOTH</a>
+    <a href="contact.html">お問い合わせ</a>
   </nav>
 
   <main class="home-blocks">
 
- <h2>切り株株式会社キラキラ創作人生のウェブサイトへようこそ❣</h2>
+    <h2>切り株株式会社キラキラ創作人生のウェブサイトへようこそ❣</h2>
 
+    <div class="section-block">
+      <h3>♡～このサイトの使い方～♡</h3>
+    </div>
 
-  <div class="section-block">
-    <h3>♡～このサイトの使い方～♡</h3>
-  </div>
+    <div class="section-block">
+      <h4>［インスピレーション］</h4>
+      <p>
+        単語･シチュエーション･台詞 に分けて、ランダムな内容を大量に記載しています。  
+        数で攻めています。お好きにピックアップして創作にお役立てください♪
+      </p>
+    </div>
 
-  <div class="section-block">
-    <h4>［インスピレーション］</h4>
-    <p>
-      単語･シチュエーション･台詞 に分けて、ランダムな内容を大量に記載しています。 
-      数で攻めています。お好きにピックアップして創作にお役立てください♪
-    </p>
-  </div>
+    <div class="section-block">
+      <h4>［シュミレーション］</h4>
+      <p>
+        「決められない」「手早く済ませたい」人におすすめ！  
+        ガチャ方式により、ランダム性をさらに強化したインスピレーションガチャ を搭載しています。  
+        また、実際に名前を入力して生成するガチャなども不定期に更新予定です♪
+      </p>
+    </div>
 
-  <div class="section-block">
-    <h4>［シュミレーション］</h4>
-    <p>
-      「決められない」「手早く済ませたい」人におすすめ！
-ガチャ方式により、ランダム性をさらに強化したインスピレーションガチャ を搭載しています。
-また、実際に名前を入力して生成するガチャなども不定期に更新予定です♪
-    </p>
-  </div>
+    <div class="section-block">
+      <h4>［夢日記］</h4>
+      <p>
+        オーナーや利用者が実際に見た夢を掲載。  
+        理想のシチュエーションから奇妙で不思議な世界まで、  
+        創作とも現実とも違う世界観を参考にしてみてください♪
+      </p>
+    </div>
 
-  <div class="section-block">
-    <h4>［夢日記］</h4>
-    <p>
-      オーナーや利用者が実際に見た夢を掲載。
-理想のシチュエーションから奇妙で不思議な世界まで、
-創作とも現実とも違う世界観を参考にしてみてください♪
-    </p>
-  </div>
+    <div class="section-block">
+      <h4>［推し活］ / ［BOOTH］</h4>
+      <p>今後さまざまなサービスを展開予定。乞うご期待！</p>
+    </div>
 
-  <div class="section-block">
-    <h4>［推し活］ / ［BOOTH］</h4>
-    <p>
-      今後さまざまなサービスを展開予定。乞うご期待！
-    </p>
-  </div>
+    <div class="section-block">
+      <h3>······権利やその他のおことわり······</h3>
+      <p>
+        このサイトはオーナー個人が創作活動を応援するものであり、趣味嗜好の偏った内容が含まれる場合があります。ご了承ください。  
+        また、サイト内で提示される全ての提案には著作権は発生せず、利用の際に許可取りなどは不要です。  
+        ご厚意で言及いただける場合は、サイト名またはサークル名(切り株式会社 キラキラ創作人生)の記載をお願いします\♡/
+      </p>
+    </div>
 
-  <div class="section-block">
-    <h3>······権利やその他のおことわり······</h3>
-    <p>
-このサイトはオーナー個人が創作活動を応援するものであり、趣味嗜好の偏った内容が含まれる場合があります。ご了承ください。
-また、サイト内で提示される全ての提案には著作権は発生せず、利用の際に許可取りなどは不要です。
-ご厚意で言及いただける場合は、サイト名またはサークル名(切り株式会社 キラキラ創作人生)の記載をお願いします\♡/
-
-
-    </p>
-  </div>
-
-</main>
-
-
+  </main>
 
   <!-- 閲覧数 -->
   <div id="view-counter-box">
     👀 <span id="view-counter">0</span> views
   </div>
+
 </body>
 </html>
+
