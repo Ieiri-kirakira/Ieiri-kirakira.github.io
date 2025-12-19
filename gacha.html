@@ -11,49 +11,60 @@ body {
   background: #fff0f7;
   padding: 20px;
 }
+
 h1 {
+  text-align: center;
   color: #d6007f;
 }
+
 .tabs {
   display: flex;
+  justify-content: center;
   gap: 10px;
-  margin-bottom: 20px;
+  margin: 20px 0;
 }
-.tab {
-  padding: 10px 16px;
+
+.tabs button {
+  padding: 10px 20px;
+  border: none;
   border-radius: 8px;
-  border: 1px solid #ff9ac9;
-  background: #fff;
-  cursor: pointer;
-}
-.tab.active {
   background: #ffd6ea;
+  cursor: pointer;
+  font-size: 16px;
 }
+
+.tabs button.active {
+  background: #ff9ac9;
+  color: #fff;
+}
+
 .section {
   display: none;
+  max-width: 700px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
 }
+
 .section.active {
   display: block;
 }
-button {
-  background: #ff7dbb;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-.result {
-  margin-top: 20px;
-  padding: 20px;
-  background: #fff;
-  border-radius: 12px;
-  border: 2px dashed #ff9ac9;
-  font-size: 18px;
-}
+
 textarea, input {
   width: 100%;
   margin-bottom: 10px;
+  padding: 8px;
+}
+
+button.main {
+  background: #ff77b7;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
 }
 </style>
 </head>
@@ -63,71 +74,61 @@ textarea, input {
 <h1>お題ガチャ</h1>
 
 <div class="tabs">
-  <div class="tab active" onclick="showTab('play')">ガチャを回す</div>
-  <div class="tab" onclick="openAdmin()">ガチャを編集</div>
+  <button id="tab-play" class="active">ガチャ</button>
+  <button id="tab-admin">管理</button>
 </div>
 
-<!-- ▼ ガチャを回す -->
+<!-- ガチャ画面 -->
 <div id="play" class="section active">
-  <input id="input1" placeholder="せめ">
-  <input id="input2" placeholder="うけ">
-  <button onclick="drawGacha()">ガチャをまわす</button>
-  <div class="result" id="result"></div>
-  <p>回した回数：<span id="count">0</span></p>
+  <p id="result">ここに結果が出ます</p>
+  <button class="main" onclick="drawGacha()">ガチャを回す</button>
 </div>
 
-<!-- ▼ 管理（最初は非表示） -->
+<!-- 管理画面 -->
 <div id="admin" class="section">
-  <h2>ガチャ編集</h2>
-  <textarea id="gachaData" rows="8"></textarea>
-  <button onclick="saveGacha()">保存</button>
+  <h2>管理用編集</h2>
+  <textarea id="data" rows="6">お題A
+お題B
+お題C</textarea>
+  <button class="main" onclick="saveData()">保存</button>
 </div>
 
 <script>
-/* ===== 設定 ===== */
-const IEIRI_ADMIN_405 = "ここを好きな文字に変更";
+const ADMIN_PASSWORD = "IEIRI_ADMIN405";
 
-/* ===== データ ===== */
-let gachaList = JSON.parse(localStorage.getItem("gachaList")) || [
-  "{input1}が{input2}に微笑んだ",
-  "{input2}は{input1}の手を引いた"
-];
-let count = Number(localStorage.getItem("count")) || 0;
+let gachaData = ["お題A","お題B","お題C"];
 
-/* ===== タブ切り替え ===== */
-function showTab(id) {
-  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+// タブ切り替え
+document.getElementById("tab-play").onclick = () => {
+  show("play");
+};
+
+document.getElementById("tab-admin").onclick = () => {
+  const pw = prompt("管理者パスワード");
+  if (pw === ADMIN_PASSWORD) {
+    show("admin");
+  } else {
+    alert("パスワードが違います");
+  }
+};
+
+function show(id) {
   document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
-  document.querySelector(`[onclick*='${id}']`).classList.add("active");
+  document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
   document.getElementById(id).classList.add("active");
+  document.getElementById("tab-" + id).classList.add("active");
 }
 
-/* ===== 管理画面 ===== */
-function openAdmin() {
-  const pass = prompt("管理者パスワード");
-  if (pass !== ADMIN_PASSWORD) return;
-  showTab("admin");
-  document.getElementById("gachaData").value = gachaList.join("\n");
-}
-
-/* ===== ガチャ保存 ===== */
-function saveGacha() {
-  gachaList = document.getElementById("gachaData").value.split("\n").filter(Boolean);
-  localStorage.setItem("gachaList", JSON.stringify(gachaList));
-  alert("保存しました");
-}
-
-/* ===== ガチャ実行 ===== */
+// ガチャ
 function drawGacha() {
-  const i1 = input1.value || "A";
-  const i2 = input2.value || "B";
-  const text = gachaList[Math.floor(Math.random() * gachaList.length)]
-    .replace("{input1}", i1)
-    .replace("{input2}", i2);
-  result.textContent = text;
-  count++;
-  localStorage.setItem("count", count);
-  document.getElementById("count").textContent = count;
+  const r = gachaData[Math.floor(Math.random() * gachaData.length)];
+  document.getElementById("result").textContent = r;
+}
+
+// 保存（仮：リロードすると消える）
+function saveData() {
+  gachaData = document.getElementById("data").value.split("\n").filter(Boolean);
+  alert("保存しました（※今は一時保存）");
 }
 </script>
 
