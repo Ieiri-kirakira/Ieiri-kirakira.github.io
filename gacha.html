@@ -1,129 +1,189 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>シミュレーション（ガチャ）｜キラキラ創作人生</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>シミュレーションガチャ｜キラキラ創作人生</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      font-family: "Noto Serif JP", serif;
-      background: #fff;
-      margin: 0;
-    }
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet">
 
-    header {
-      background: #ffe8f5;
-      padding: 20px;
-      text-align: center;
-      font-size: 28px;
-      color: #d6007f;
-      font-weight: bold;
-    }
+<style>
+body {
+  font-family: "Noto Serif JP", serif;
+  background: #fff0f7;
+  margin: 0;
+  padding: 20px;
+  color: #8a004f;
+}
 
-    main {
-      max-width: 800px;
-      margin: 40px auto;
-      padding: 0 20px;
-    }
+h1 {
+  text-align: center;
+  color: #d6007f;
+  margin-bottom: 30px;
+}
 
-    .gacha-block {
-      background: #fff5fb;
-      border: 1px solid #ffb6d9;
-      border-radius: 12px;
-      padding: 25px;
-      margin-bottom: 40px;
-    }
+.gacha-box {
+  max-width: 500px;
+  margin: 0 auto;
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(255, 160, 200, 0.3);
+}
 
-    h2 {
-      margin-top: 0;
-      color: #c7006b;
-    }
+.mode-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
 
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0 20px;
-      border-radius: 6px;
-      border: 1px solid #ff9ac9;
-    }
+.mode-buttons button {
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: none;
+  background: #ffd1e8;
+  color: #a0005a;
+  cursor: pointer;
+}
 
-    button {
-      background: #ff6fb1;
-      color: #fff;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 16px;
-    }
+.mode-buttons button.active {
+  background: #ff7fbf;
+  color: #fff;
+}
 
-    .result {
-      margin-top: 20px;
-      font-size: 18px;
-      color: #a3005a;
-    }
-  </style>
+.input-area {
+  margin-bottom: 15px;
+  display: none;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ffb6d9;
+  font-size: 16px;
+}
+
+button#gachaBtn {
+  width: 100%;
+  padding: 12px;
+  font-size: 18px;
+  border-radius: 30px;
+  border: none;
+  background: #ff5fa2;
+  color: #fff;
+  cursor: pointer;
+}
+
+#result {
+  margin-top: 25px;
+  text-align: center;
+  font-size: 20px;
+  line-height: 1.6;
+  color: #d6007f;
+  font-weight: bold;
+  min-height: 3em;
+}
+
+/* スマホ調整 */
+@media (max-width: 600px) {
+  body {
+    padding: 12px;
+  }
+  h1 {
+    font-size: 22px;
+  }
+}
+</style>
 </head>
 
 <body>
-  <header>シミュレーション（ガチャ）</header>
 
-  <main>
+<h1>🎲 シミュレーションガチャ 🎲</h1>
 
-    <!-- 入力1つのガチャ -->
-    <div class="gacha-block">
-      <h2>お題ガチャ（入力1つ）</h2>
-      <input id="input1" placeholder="名前・単語など">
-      <button onclick="gachaOne()">ガチャを回す</button>
-      <div class="result" id="result1"></div>
-    </div>
+<div class="gacha-box">
 
-    <!-- 入力2つのガチャ -->
-    <div class="gacha-block">
-      <h2>お題ガチャ（入力2つ）</h2>
-      <input id="inputA" placeholder="要素A">
-      <input id="inputB" placeholder="要素B">
-      <button onclick="gachaTwo()">ガチャを回す</button>
-      <div class="result" id="result2"></div>
-    </div>
+  <div class="mode-buttons">
+    <button onclick="setMode(0)" class="active" id="btn0">入力なし</button>
+    <button onclick="setMode(1)" id="btn1">入力1つ</button>
+    <button onclick="setMode(2)" id="btn2">入力2つ</button>
+  </div>
 
-  </main>
+  <div class="input-area" id="input1">
+    <input type="text" id="text1" placeholder="名前・キャラ名など">
+  </div>
 
-  <script>
-    const themes = [
-      "切ない恋",
-      "ホラー展開",
-      "コメディ路線",
-      "ファンタジー世界",
-      "日常の違和感"
-    ];
+  <div class="input-area" id="input2">
+    <input type="text" id="text2" placeholder="もう一つ入力">
+  </div>
 
-    const actions = [
-      "突然始まる",
-      "誰にも言えない",
-      "運命的に出会う",
-      "取り返しがつかなくなる",
-      "静かに終わる"
-    ];
+  <button id="gachaBtn" onclick="drawGacha()">ガチャを回す！</button>
 
-    function random(arr) {
-      return arr[Math.floor(Math.random() * arr.length)];
-    }
+  <div id="result"></div>
 
-    function gachaOne() {
-      const v = document.getElementById("input1").value || "あなた";
-      document.getElementById("result1").textContent =
-        v + "が主人公の「" + random(themes) + "」な物語";
-    }
+</div>
 
-    function gachaTwo() {
-      const a = document.getElementById("inputA").value || "誰か";
-      const b = document.getElementById("inputB").value || "何か";
-      document.getElementById("result2").textContent =
-        a + "と" + b + "が「" + random(actions) + "」展開";
-    }
-  </script>
+<script>
+let mode = 0;
+
+const gacha0 = [
+  "雨の日、偶然出会った二人",
+  "夜の屋上で秘密の会話",
+  "期限付きの関係",
+  "叶わない約束",
+  "世界が終わる前の一日"
+];
+
+const gacha1 = [
+  "【{A}】が突然告白される話",
+  "【{A}】が異世界に飛ばされる",
+  "【{A}】の秘密が暴かれる夜",
+  "【{A}】が選ばれなかった未来"
+];
+
+const gacha2 = [
+  "【{A}】と【{B}】が再会するまでの物語",
+  "【{A}】×【{B}】のすれ違い",
+  "【{A}】と【{B}】の約束が壊れる瞬間",
+  "【{A}】と【{B}】だけが知る真実"
+];
+
+function setMode(m) {
+  mode = m;
+  document.getElementById("input1").style.display = (m >= 1) ? "block" : "none";
+  document.getElementById("input2").style.display = (m >= 2) ? "block" : "none";
+
+  document.querySelectorAll(".mode-buttons button").forEach(btn => btn.classList.remove("active"));
+  document.getElementById("btn" + m).classList.add("active");
+}
+
+function drawGacha() {
+  let result = "";
+
+  if (mode === 0) {
+    result = randomPick(gacha0);
+  }
+
+  if (mode === 1) {
+    const a = document.getElementById("text1").value || "誰か";
+    result = randomPick(gacha1).replace("{A}", a);
+  }
+
+  if (mode === 2) {
+    const a = document.getElementById("text1").value || "A";
+    const b = document.getElementById("text2").value || "B";
+    result = randomPick(gacha2).replace("{A}", a).replace("{B}", b);
+  }
+
+  document.getElementById("result").textContent = result;
+}
+
+function randomPick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+</script>
 
 </body>
 </html>
