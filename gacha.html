@@ -6,68 +6,53 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* ===== 全体 ===== */
-body {
-  margin: 0;
-  font-family: "Noto Serif JP", serif;
-  background: #fff0f7;
-  color: #a3005a;
+body{
+  margin:0;
+  font-family:"Noto Serif JP",serif;
+  background:#fff0f7;
+  color:#a3005a;
 }
-h1,h2,h3 {
-  text-align: center;
+h1,h2,h3{text-align:center;}
+button{
+  background:#ff7dbb;
+  color:#fff;
+  border:none;
+  border-radius:999px;
+  padding:10px 18px;
+  font-size:15px;
+  cursor:pointer;
 }
-button {
-  background: #ff7dbb;
-  color: #fff;
-  border: none;
-  border-radius: 999px;
-  padding: 10px 18px;
-  font-size: 16px;
-  cursor: pointer;
+button:hover{background:#ff5fa9;}
+textarea,input,select{
+  width:100%;
+  box-sizing:border-box;
+  border-radius:10px;
+  border:1px solid #ffb6d9;
+  padding:8px;
 }
-button:hover {
-  background: #ff5fa9;
+.tabs{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  margin:20px 0;
 }
+.tab-content{display:none;}
+.tab-content.active{display:block;}
 
-/* ===== タブ ===== */
-.tabs {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin: 20px 0;
+.card{
+  background:#fff;
+  border-radius:18px;
+  padding:20px;
+  margin:20px auto;
+  max-width:520px;
+  box-shadow:0 6px 18px rgba(255,120,180,.25);
+  text-align:center;
 }
-.tab-content {
-  display: none;
-}
-.tab-content.active {
-  display: block;
-}
+.slot{font-size:20px;margin:10px 0;}
+.count{font-size:13px;color:#888;margin-top:10px;}
 
-/* ===== ガチャカード ===== */
-.gacha-card {
-  background: #fff;
-  border-radius: 18px;
-  padding: 20px;
-  margin: 20px auto;
-  max-width: 500px;
-  box-shadow: 0 6px 18px rgba(255,120,180,0.25);
-  text-align: center;
-}
-.slot {
-  font-size: 20px;
-  margin: 10px 0;
-}
-.count {
-  font-size: 13px;
-  color: #888;
-  margin-top: 10px;
-}
-
-/* ===== スマホ最適化 ===== */
-@media (max-width: 600px) {
-  .slot {
-    font-size: 18px;
-  }
+@media(max-width:600px){
+  .slot{font-size:18px;}
 }
 </style>
 </head>
@@ -83,13 +68,10 @@ button:hover {
 
 <!-- ===== ガチャ画面 ===== -->
 <div id="play" class="tab-content active">
+  <div class="card">
+    <h2 id="gacha-title"></h2>
 
-  <div class="gacha-card">
-    <h2>インスピレーションガチャ</h2>
-
-    <div class="slot" id="slot1">―</div>
-    <div class="slot" id="slot2">―</div>
-    <div class="slot" id="slot3">―</div>
+    <div id="slots"></div>
 
     <button onclick="rollGacha()">ガチャを回す</button>
 
@@ -97,59 +79,168 @@ button:hover {
       回された回数：<span id="count">0</span>
     </div>
   </div>
-
 </div>
 
-<!-- ===== 管理画面（STEP Bで本実装） ===== -->
+<!-- ===== 管理画面 ===== -->
 <div id="admin" class="tab-content">
-  <div class="gacha-card">
+  <div class="card">
     <h2>管理画面</h2>
-    <p>※ 次のステップで編集UIを実装します</p>
+
+    <label>ガチャ選択</label>
+    <select id="gachaSelect" onchange="selectGacha()"></select>
+
+    <hr>
+
+    <label>ガチャ名</label>
+    <input id="editTitle">
+
+    <label>スロット数</label>
+    <select id="slotCount" onchange="renderSlotEditors()">
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+    </select>
+
+    <div id="slotEditors"></div>
+
+    <button onclick="saveGacha()">保存</button>
+    <button onclick="addGacha()">＋ 新しいガチャ</button>
   </div>
 </div>
 
 <script>
-/* ===== タブ切り替え ===== */
-function showTab(id) {
+/* ===== 基本 ===== */
+function showTab(id){
   document.querySelectorAll(".tab-content")
-    .forEach(el => el.classList.remove("active"));
+    .forEach(el=>el.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
-document.getElementById("tab-play").onclick = () => showTab("play");
+document.getElementById("tab-play").onclick=()=>showTab("play");
 
-/* ===== 管理タブ（仮：パスワード） ===== */
-const ADMIN_PASSWORD = "IEIRI_ADMIN_405";
-document.getElementById("tab-admin").onclick = () => {
-  const pw = prompt("管理者パスワードを入力してください");
-  if (pw === ADMIN_PASSWORD) {
-    showTab("admin");
-  } else {
-    alert("パスワードが違います");
-  }
+/* ===== 管理パスワード ===== */
+const ADMIN_PASSWORD="IEIRI_ADMIN_405";
+document.getElementById("tab-admin").onclick=()=>{
+  const pw=prompt("管理者パスワードを入力してください");
+  if(pw===ADMIN_PASSWORD){showTab("admin");}
+  else{alert("パスワードが違います");}
 };
 
-/* ===== ガチャデータ ===== */
-const slot1List = ["幼馴染", "年上の彼", "謎の人物", "ライバル"];
-const slot2List = ["雨の日の帰り道", "放課後の教室", "夢の中", "突然の再会"];
-const slot3List = ["告白される", "喧嘩になる", "キス寸前", "衝撃の事実が発覚"];
+/* ===== データ ===== */
+let data=JSON.parse(localStorage.getItem("gachaData"))||{
+  current:0,
+  gachas:[
+    {
+      title:"インスピレーションガチャ",
+      slots:[
+        ["幼馴染","年上","ライバル"],
+        ["放課後","雨の日","夢の中"],
+        ["告白","再会","衝撃の真実"]
+      ],
+      count:0
+    }
+  ]
+};
+save();
 
-/* ===== 回数カウント ===== */
-let count = localStorage.getItem("gachaCount") || 0;
-document.getElementById("count").textContent = count;
+/* ===== 表示 ===== */
+function renderPlay(){
+  const g=data.gachas[data.current];
+  document.getElementById("gacha-title").textContent=g.title;
+  document.getElementById("count").textContent=g.count;
 
-/* ===== ガチャ処理 ===== */
-function rollGacha() {
-  document.getElementById("slot1").textContent =
-    slot1List[Math.floor(Math.random() * slot1List.length)];
-  document.getElementById("slot2").textContent =
-    slot2List[Math.floor(Math.random() * slot2List.length)];
-  document.getElementById("slot3").textContent =
-    slot3List[Math.floor(Math.random() * slot3List.length)];
-
-  count++;
-  localStorage.setItem("gachaCount", count);
-  document.getElementById("count").textContent = count;
+  const s=document.getElementById("slots");
+  s.innerHTML="";
+  g.slots.forEach(()=> {
+    const d=document.createElement("div");
+    d.className="slot";
+    d.textContent="―";
+    s.appendChild(d);
+  });
 }
+
+function rollGacha(){
+  const g=data.gachas[data.current];
+  document.querySelectorAll(".slot").forEach((el,i)=>{
+    const list=g.slots[i];
+    el.textContent=list[Math.floor(Math.random()*list.length)];
+  });
+  g.count++;
+  save();
+  renderPlay();
+}
+
+/* ===== 管理 ===== */
+function renderAdmin(){
+  const sel=document.getElementById("gachaSelect");
+  sel.innerHTML="";
+  data.gachas.forEach((g,i)=>{
+    const o=document.createElement("option");
+    o.value=i;
+    o.textContent=g.title;
+    sel.appendChild(o);
+  });
+  sel.value=data.current;
+  loadEditor();
+}
+
+function selectGacha(){
+  data.current=Number(document.getElementById("gachaSelect").value);
+  save();
+  loadEditor();
+  renderPlay();
+}
+
+function loadEditor(){
+  const g=data.gachas[data.current];
+  document.getElementById("editTitle").value=g.title;
+  document.getElementById("slotCount").value=g.slots.length;
+  renderSlotEditors();
+}
+
+function renderSlotEditors(){
+  const g=data.gachas[data.current];
+  const c=document.getElementById("slotEditors");
+  c.innerHTML="";
+  const n=Number(document.getElementById("slotCount").value);
+  g.slots.length=n;
+
+  for(let i=0;i<n;i++){
+    if(!g.slots[i]) g.slots[i]=[];
+    const ta=document.createElement("textarea");
+    ta.value=g.slots[i].join("\n");
+    ta.oninput=()=>g.slots[i]=ta.value.split("\n").filter(Boolean);
+    c.appendChild(document.createTextNode(`スロット${i+1}`));
+    c.appendChild(ta);
+  }
+}
+
+function saveGacha(){
+  const g=data.gachas[data.current];
+  g.title=document.getElementById("editTitle").value;
+  save();
+  renderAdmin();
+  renderPlay();
+}
+
+function addGacha(){
+  data.gachas.push({
+    title:"新しいガチャ",
+    slots:[[]],
+    count:0
+  });
+  data.current=data.gachas.length-1;
+  save();
+  renderAdmin();
+  renderPlay();
+}
+
+function save(){
+  localStorage.setItem("gachaData",JSON.stringify(data));
+}
+
+/* ===== 初期描画 ===== */
+renderPlay();
+renderAdmin();
 </script>
 
 </body>
