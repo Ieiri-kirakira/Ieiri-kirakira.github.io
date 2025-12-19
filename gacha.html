@@ -230,13 +230,18 @@ function renderSlotEditors(){
 }
 
 function saveGacha(){
-  const g=data.gachas[data.current];
-  g.title=editTitle.value;
-  g.inputs=Number(inputCount.value);
+  const g = data.gachas[data.current];
+  g.title = editTitle.value;
+  g.inputs = Number(inputCount.value);
+
+  // ★ これを追加
+  g.slots.length = Number(slotCount.value);
+
   save();
   renderAdmin();
   renderPlay();
 }
+
 
 function addGacha(){
   data.gachas.push({
