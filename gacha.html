@@ -2,110 +2,132 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>シミュレーション（ガチャ）</title>
+<title>お題ガチャ｜キラキラ創作人生</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- 共通データ -->
-<script src="gacha-data.js"></script>
-<script src="gacha-common.js"></script>
 
 <style>
 body {
   font-family: "Noto Serif JP", serif;
-  background: #fff7fb;
+  background: #fff0f7;
   padding: 20px;
 }
-
 h1 {
   color: #d6007f;
-  text-align: center;
 }
-
-select, input {
-  width: 100%;
-  padding: 10px;
-  margin: 8px 0;
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.tab {
+  padding: 10px 16px;
   border-radius: 8px;
   border: 1px solid #ff9ac9;
-}
-
-button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 12px;
-  border: none;
-  border-radius: 12px;
-  background: #ff7dbb;
-  color: white;
-  font-size: 18px;
+  background: #fff;
   cursor: pointer;
 }
-
-.result-card {
-  margin-top: 24px;
-  padding: 24px;
-  background: linear-gradient(135deg, #ffe8f5, #ffffff);
-  border: 2px solid #ff9ac9;
-  border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(255,105,180,.25);
+.tab.active {
+  background: #ffd6ea;
+}
+.section {
+  display: none;
+}
+.section.active {
+  display: block;
+}
+button {
+  background: #ff7dbb;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.result {
+  margin-top: 20px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  border: 2px dashed #ff9ac9;
   font-size: 18px;
-  line-height: 1.7;
+}
+textarea, input {
+  width: 100%;
+  margin-bottom: 10px;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🎀 シミュレーションガチャ 🎀</h1>
+<h1>お題ガチャ</h1>
 
-<select id="gachaSelect"></select>
+<div class="tabs">
+  <div class="tab active" onclick="showTab('play')">ガチャを回す</div>
+  <div class="tab" onclick="openAdmin()">ガチャを編集</div>
+</div>
 
-<div id="inputArea"></div>
+<!-- ▼ ガチャを回す -->
+<div id="play" class="section active">
+  <input id="input1" placeholder="せめ">
+  <input id="input2" placeholder="うけ">
+  <button onclick="drawGacha()">ガチャをまわす</button>
+  <div class="result" id="result"></div>
+  <p>回した回数：<span id="count">0</span></p>
+</div>
 
-<button onclick="spin()">ガチャをまわす</button>
-
-<div id="result" class="result-card" style="display:none;"></div>
+<!-- ▼ 管理（最初は非表示） -->
+<div id="admin" class="section">
+  <h2>ガチャ編集</h2>
+  <textarea id="gachaData" rows="8"></textarea>
+  <button onclick="saveGacha()">保存</button>
+</div>
 
 <script>
-const select = document.getElementById("gachaSelect");
-const inputArea = document.getElementById("inputArea");
-const resultBox = document.getElementById("result");
+/* ===== 設定 ===== */
+const IEIRI_ADMIN_405 = "ここを好きな文字に変更";
 
-// ガチャ一覧生成
-GACHA_DATA.gachas.forEach(g => {
-  const opt = document.createElement("option");
-  opt.value = g.id;
-  opt.textContent = g.title;
-  select.appendChild(opt);
-});
+/* ===== データ ===== */
+let gachaList = JSON.parse(localStorage.getItem("gachaList")) || [
+  "{input1}が{input2}に微笑んだ",
+  "{input2}は{input1}の手を引いた"
+];
+let count = Number(localStorage.getItem("count")) || 0;
 
-select.addEventListener("change", renderInputs);
-
-// input生成
-function renderInputs() {
-  inputArea.innerHTML = "";
-  const gacha = GACHA_DATA.gachas.find(g => g.id === select.value);
-
-  gacha.inputs.forEach((label, i) => {
-    const input = document.createElement("input");
-    input.placeholder = label;
-    input.className = "gacha-input";
-    inputArea.appendChild(input);
-  });
+/* ===== タブ切り替え ===== */
+function showTab(id) {
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+  document.querySelector(`[onclick*='${id}']`).classList.add("active");
+  document.getElementById(id).classList.add("active");
 }
 
-// 初期表示
-renderInputs();
+/* ===== 管理画面 ===== */
+function openAdmin() {
+  const pass = prompt("管理者パスワード");
+  if (pass !== ADMIN_PASSWORD) return;
+  showTab("admin");
+  document.getElementById("gachaData").value = gachaList.join("\n");
+}
 
-// ガチャ実行
-function spin() {
-  const gacha = GACHA_DATA.gachas.find(g => g.id === select.value);
-  const inputs = [...document.querySelectorAll(".gacha-input")]
-    .map(i => i.value);
+/* ===== ガチャ保存 ===== */
+function saveGacha() {
+  gachaList = document.getElementById("gachaData").value.split("\n").filter(Boolean);
+  localStorage.setItem("gachaList", JSON.stringify(gachaList));
+  alert("保存しました");
+}
 
-  const text = drawGacha(gacha, inputs);
-  resultBox.textContent = text;
-  resultBox.style.display = "block";
+/* ===== ガチャ実行 ===== */
+function drawGacha() {
+  const i1 = input1.value || "A";
+  const i2 = input2.value || "B";
+  const text = gachaList[Math.floor(Math.random() * gachaList.length)]
+    .replace("{input1}", i1)
+    .replace("{input2}", i2);
+  result.textContent = text;
+  count++;
+  localStorage.setItem("count", count);
+  document.getElementById("count").textContent = count;
 }
 </script>
 
