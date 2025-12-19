@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>シミュレーションガチャ｜キラキラ創作人生</title>
+<title>お題ガチャ｜キラキラ創作人生</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet">
@@ -11,177 +11,137 @@
 body {
   font-family: "Noto Serif JP", serif;
   background: #fff0f7;
-  margin: 0;
   padding: 20px;
-  color: #8a004f;
-}
-
-h1 {
   text-align: center;
-  color: #d6007f;
-  margin-bottom: 30px;
 }
 
+/* ガチャ全体 */
 .gacha-box {
-  max-width: 500px;
-  margin: 0 auto;
+  max-width: 420px;
+  margin: auto;
   background: #ffffff;
-  padding: 25px;
   border-radius: 16px;
-  box-shadow: 0 4px 10px rgba(255, 160, 200, 0.3);
+  padding: 25px;
+  box-shadow: 0 8px 20px rgba(255, 150, 200, 0.35);
 }
 
-.mode-buttons {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
+/* タイトル */
+h1 {
+  color: #d6007f;
+  margin-bottom: 10px;
+}
+
+/* 回数 */
+.counter {
+  font-size: 14px;
+  color: #a3005a;
   margin-bottom: 20px;
-  flex-wrap: wrap;
 }
 
-.mode-buttons button {
-  padding: 8px 14px;
-  border-radius: 20px;
-  border: none;
-  background: #ffd1e8;
-  color: #a0005a;
-  cursor: pointer;
-}
-
-.mode-buttons button.active {
-  background: #ff7fbf;
-  color: #fff;
-}
-
-.input-area {
-  margin-bottom: 15px;
-  display: none;
-}
-
+/* 入力 */
 input {
-  width: 100%;
+  width: 90%;
   padding: 10px;
+  margin-bottom: 10px;
   border-radius: 10px;
-  border: 1px solid #ffb6d9;
+  border: 1px solid #ff9ac9;
   font-size: 16px;
 }
 
-button#gachaBtn {
-  width: 100%;
-  padding: 12px;
+/* ボタン */
+button {
+  padding: 12px 26px;
   font-size: 18px;
   border-radius: 30px;
   border: none;
-  background: #ff5fa2;
-  color: #fff;
+  background: linear-gradient(135deg, #ff7ac8, #ffb6e1);
+  color: white;
   cursor: pointer;
+  box-shadow: 0 4px 10px rgba(255, 120, 180, 0.4);
+}
+button:hover {
+  opacity: 0.9;
 }
 
-#result {
+/* 結果カード */
+.result-card {
   margin-top: 25px;
-  text-align: center;
-  font-size: 20px;
-  line-height: 1.6;
-  color: #d6007f;
+  padding: 25px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #fff, #fff3fa);
+  border: 2px solid #ffb6d9;
+  box-shadow: 0 10px 25px rgba(255, 150, 200, 0.45);
+  font-size: 22px;
+  color: #c7006b;
   font-weight: bold;
-  min-height: 3em;
-}
-
-/* スマホ調整 */
-@media (max-width: 600px) {
-  body {
-    padding: 12px;
-  }
-  h1 {
-    font-size: 22px;
-  }
+  display: none;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🎲 シミュレーションガチャ 🎲</h1>
-
 <div class="gacha-box">
+  <h1>🎀 お題ガチャ 🎀</h1>
 
-  <div class="mode-buttons">
-    <button onclick="setMode(0)" class="active" id="btn0">入力なし</button>
-    <button onclick="setMode(1)" id="btn1">入力1つ</button>
-    <button onclick="setMode(2)" id="btn2">入力2つ</button>
+  <!-- ガチャ回数 -->
+  <div class="counter">
+    このガチャの総回数：<span id="count">0</span> 回
   </div>
 
-  <div class="input-area" id="input1">
-    <input type="text" id="text1" placeholder="名前・キャラ名など">
-  </div>
+  <!-- 入力（必要ないガチャなら消してOK） -->
+  <input id="input1" placeholder="名前（任意）">
+  <input id="input2" placeholder="キーワード（任意）">
 
-  <div class="input-area" id="input2">
-    <input type="text" id="text2" placeholder="もう一つ入力">
-  </div>
+  <button onclick="drawGacha()">ガチャを回す</button>
 
-  <button id="gachaBtn" onclick="drawGacha()">ガチャを回す！</button>
-
-  <div id="result"></div>
-
+  <!-- 結果 -->
+  <div id="result" class="result-card"></div>
 </div>
 
 <script>
-let mode = 0;
+/* ====== 設定 ====== */
+// ガチャID（別ガチャ作るときはここを変える）
+const GACHA_ID = "odai_gacha_01";
 
-const gacha0 = [
-  "雨の日、偶然出会った二人",
-  "夜の屋上で秘密の会話",
-  "期限付きの関係",
-  "叶わない約束",
-  "世界が終わる前の一日"
+// お題リスト
+const items = [
+  "突然の再会",
+  "秘密を抱えた主人公",
+  "雨の日の告白",
+  "正体不明のメッセージ",
+  "期限付きの契約",
+  "偽物と本物",
+  "誰にも言えない願い"
 ];
 
-const gacha1 = [
-  "【{A}】が突然告白される話",
-  "【{A}】が異世界に飛ばされる",
-  "【{A}】の秘密が暴かれる夜",
-  "【{A}】が選ばれなかった未来"
-];
+/* ====== 回数カウント ====== */
+let count = localStorage.getItem(GACHA_ID) || 0;
+document.getElementById("count").textContent = count;
 
-const gacha2 = [
-  "【{A}】と【{B}】が再会するまでの物語",
-  "【{A}】×【{B}】のすれ違い",
-  "【{A}】と【{B}】の約束が壊れる瞬間",
-  "【{A}】と【{B}】だけが知る真実"
-];
-
-function setMode(m) {
-  mode = m;
-  document.getElementById("input1").style.display = (m >= 1) ? "block" : "none";
-  document.getElementById("input2").style.display = (m >= 2) ? "block" : "none";
-
-  document.querySelectorAll(".mode-buttons button").forEach(btn => btn.classList.remove("active"));
-  document.getElementById("btn" + m).classList.add("active");
-}
-
+/* ====== ガチャ処理 ====== */
 function drawGacha() {
-  let result = "";
+  // 回数増加
+  count++;
+  localStorage.setItem(GACHA_ID, count);
+  document.getElementById("count").textContent = count;
 
-  if (mode === 0) {
-    result = randomPick(gacha0);
-  }
+  // 入力取得
+  const a = document.getElementById("input1").value;
+  const b = document.getElementById("input2").value;
 
-  if (mode === 1) {
-    const a = document.getElementById("text1").value || "誰か";
-    result = randomPick(gacha1).replace("{A}", a);
-  }
+  // ランダム抽選
+  const item = items[Math.floor(Math.random() * items.length)];
 
-  if (mode === 2) {
-    const a = document.getElementById("text1").value || "A";
-    const b = document.getElementById("text2").value || "B";
-    result = randomPick(gacha2).replace("{A}", a).replace("{B}", b);
-  }
+  // 表示文（入力なしでもOK）
+  let text = item;
+  if (a) text += `｜${a}`;
+  if (b) text += `｜${b}`;
 
-  document.getElementById("result").textContent = result;
-}
-
-function randomPick(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
+  // 結果表示
+  const result = document.getElementById("result");
+  result.textContent = text;
+  result.style.display = "block";
 }
 </script>
 
