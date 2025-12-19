@@ -1,18 +1,79 @@
-<script>
-const ADMIN_PASSWORD = "IEIRI_ADMIN_405"; // ★ここを自分のパスワードに
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>お題ガチャ</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<style>
+body {
+  font-family: sans-serif;
+  background: #fff0f7;
+  padding: 20px;
+}
+.tabs button {
+  margin-right: 10px;
+  padding: 8px 14px;
+}
+.section {
+  display: none;
+  margin-top: 20px;
+}
+.section.active {
+  display: block;
+}
+</style>
+</head>
+
+<body>
+
+<h1>お題ガチャ</h1>
+
+<div class="tabs">
+  <button id="tab-play">ガチャ</button>
+  <button id="tab-admin">管理</button>
+</div>
+
+<div id="play" class="section active">
+  <p id="result">ここに結果</p>
+  <button onclick="draw()">回す</button>
+</div>
+
+<div id="admin" class="section">
+  <h2>管理画面</h2>
+  <p>ここが表示されたら成功</p>
+</div>
+
+<script>
+const ADMIN_PASSWORD = "IEIRI_ADMIN_405";
+
+// タブ切り替え関数
+function showSection(id) {
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+// ガチャ
+function draw() {
+  document.getElementById("result").textContent = "🎀 ガチャ結果！";
+}
+
+// 管理タブ
 document.getElementById("tab-admin").onclick = () => {
   const pw = prompt("管理者パスワードを入力してください");
 
-  // デバッグ用（動いたら消してOK）
-  console.log("入力:", pw);
-  console.log("設定:", ADMIN_PASSWORD);
-
   if (pw === ADMIN_PASSWORD) {
-    show("admin");   // ← 管理タブを表示
+    showSection("admin");
   } else {
     alert("パスワードが違います");
   }
 };
+
+// ガチャタブ
+document.getElementById("tab-play").onclick = () => {
+  showSection("play");
+};
 </script>
 
+</body>
+</html>
