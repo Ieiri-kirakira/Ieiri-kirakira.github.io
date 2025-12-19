@@ -1,182 +1,52 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<title>ガチャ管理ページ</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-body {
-  font-family: "Noto Serif JP", serif;
-  background: #fff5fb;
-  margin: 0;
-  padding: 20px;
-}
-
-/* ===== タブ ===== */
-.tabs {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.tab-btn {
-  padding: 10px 16px;
-  border-radius: 10px;
-  border: 1px solid #ff9ac9;
-  background: #fff;
-  cursor: pointer;
-}
-
-.tab-btn.active {
-  background: #ffddf0;
-  font-weight: bold;
-}
-
-.tab-content {
-  display: none;
-}
-
-.tab-content.active {
-  display: block;
-}
-
-/* ===== 共通UI ===== */
-.box {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 20px;
-  margin-bottom: 20px;
-  border: 1px solid #ffd0e6;
-}
-
-button {
-  padding: 10px 18px;
-  border-radius: 12px;
-  border: none;
-  background: #ff7db7;
-  color: #fff;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-textarea, input {
-  width: 100%;
-  padding: 10px;
-  margin-top: 8px;
-  margin-bottom: 12px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-}
-
-/* 結果演出 */
-#result {
-  margin-top: 20px;
-  padding: 20px;
-  border-radius: 16px;
-  background: linear-gradient(135deg, #ffe6f3, #fff);
-  font-size: 20px;
-  font-weight: bold;
-  text-align: center;
-}
-</style>
+  <meta charset="UTF-8">
+  <title>ガチャ管理画面</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: "Noto Serif JP", serif;
+      background: #fff0f7;
+      padding: 30px;
+    }
+    h1 {
+      color: #d6007f;
+    }
+    .admin-box {
+      background: #fff;
+      border: 2px solid #ffb6d9;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+  </style>
 </head>
-
 <body>
 
-<h1>🎀 ガチャ管理ページ</h1>
-
-<div class="tabs">
-  <button class="tab-btn active" onclick="openTab('play')">ガチャを回す</button>
-  <button class="tab-btn" onclick="openTab('admin')">ガチャ追加・編集</button>
-</div>
-
-<!-- ================= ガチャを回す ================= -->
-<div id="play" class="tab-content active">
-  <div class="box">
-    <h2>🎲 お題ガチャ</h2>
-
-    <input id="input1" placeholder="入力1（任意）">
-    <input id="input2" placeholder="入力2（任意）">
-
-    <button onclick="spin()">ガチャをまわす</button>
-
-    <div id="result">結果がここに出ます</div>
-    <p>総回数：<span id="count">0</span> 回</p>
-  </div>
-</div>
-
-<!-- ================= 管理者 ================= -->
-<div id="admin" class="tab-content">
-  <div class="box">
-    <h2>🔒 管理者ログイン</h2>
-    <input type="password" id="adminPass" placeholder="管理者パスワード">
-    <button onclick="login()">ログイン</button>
-  </div>
-
-  <div class="box" id="editor" style="display:none;">
-    <h2>🛠 ガチャ内容編集</h2>
-    <p>1行＝1お題</p>
-    <textarea id="gachaData" rows="10"></textarea>
-    <button onclick="saveData()">保存</button>
-  </div>
-</div>
-
 <script>
-/* ===== 設定 ===== */
-const ADMIN_PASSWORD = "IEIRI_ADMIN_405"; // ←ここを変えればOK
+  const PASSWORD = "IEIRI_ADMIN_405"; // ★ここだけ好きなパスワードに変える
 
-/* ===== データ ===== */
-let gachaList = JSON.parse(localStorage.getItem("gachaList")) || [
-  "[input1]と[input2]が偶然同じことを考えていた",
-  "[input1]が眠れず、[input2]がそっと声をかける",
-  "静かな夜、[input1]と[input2]は並んで座っていた"
-];
+  const input = prompt("管理者パスワードを入力してください");
 
-let count = Number(localStorage.getItem("count")) || 0;
-
-/* ===== タブ ===== */
-function openTab(id) {
-  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-  document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
-  event.target.classList.add("active");
-  document.getElementById(id).classList.add("active");
-}
-
-/* ===== ガチャ ===== */
-function spin() {
-  const i1 = document.getElementById("input1").value || "A";
-  const i2 = document.getElementById("input2").value || "B";
-  const text = gachaList[Math.floor(Math.random() * gachaList.length)]
-    .replaceAll("[input1]", i1)
-    .replaceAll("[input2]", i2);
-
-  document.getElementById("result").textContent = text;
-
-  count++;
-  localStorage.setItem("count", count);
-  document.getElementById("count").textContent = count;
-}
-
-/* ===== 管理者 ===== */
-function login() {
-  if (document.getElementById("adminPass").value === ADMIN_PASSWORD) {
-    document.getElementById("editor").style.display = "block";
-    document.getElementById("gachaData").value = gachaList.join("\n");
-  } else {
+  if (input !== PASSWORD) {
     alert("パスワードが違います");
+    location.href = "gacha.html";
   }
-}
-
-function saveData() {
-  gachaList = document.getElementById("gachaData").value.split("\n").filter(Boolean);
-  localStorage.setItem("gachaList", JSON.stringify(gachaList));
-  alert("保存しました！");
-}
-
-/* 初期表示 */
-document.getElementById("count").textContent = count;
 </script>
+
+<h1>🔒 ガチャ管理画面</h1>
+
+<div class="admin-box">
+  <p>ここからガチャの追加・編集ができます。</p>
+
+  <!-- 今後ここに編集UIを足す -->
+  <ul>
+    <li>ガチャ内容の追加</li>
+    <li>スロット編集</li>
+    <li>回数カウント確認</li>
+  </ul>
+</div>
 
 </body>
 </html>
