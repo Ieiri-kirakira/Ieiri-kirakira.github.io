@@ -2,58 +2,218 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>お題ガチャ - キラキラ創作人生</title>
+  <title>シミュレーションガチャ｜キラキラ創作人生</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- フォント -->
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet">
 
   <style>
     body {
       font-family: "Noto Serif JP", serif;
-      padding:20px;
+      margin: 0;
+      background: #fff6fb;
+      color: #6b003a;
     }
+
+    header {
+      background: #ffe0f0;
+      padding: 20px;
+      text-align: center;
+      font-size: 28px;
+      color: #d6007f;
+      border-bottom: 2px solid #ffb6d9;
+    }
+
+    main {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 30px 20px 60px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .gacha-box {
+      background: #ffffff;
+      border: 2px solid #ffd0e6;
+      border-radius: 16px;
+      padding: 30px 20px;
+      margin-bottom: 50px;
+    }
+
+    .gacha-box h3 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #c4006a;
+    }
+
+    .inputs {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ffb6d9;
+    }
+
     button {
-      padding: 10px 20px;
+      display: block;
+      margin: 0 auto;
+      padding: 12px 30px;
       font-size: 18px;
-      border-radius: 10px;
+      border-radius: 999px;
       border: none;
-      background: #ff7dbb;
+      background: #ff7bbd;
       color: #fff;
       cursor: pointer;
     }
-    #result {
-      margin-top: 20px;
-      font-size: 24px;
-      color: #d6007f;
-      font-weight: bold;
+
+    button:hover {
+      background: #ff5fae;
+    }
+
+    .result {
+      margin-top: 25px;
+      padding: 20px;
+      background: #fff0f8;
+      border-radius: 12px;
+      font-size: 18px;
+      line-height: 1.8;
+      text-align: center;
+      white-space: pre-line;
+    }
+
+    /* スマホ調整 */
+    @media (max-width: 480px) {
+      header {
+        font-size: 22px;
+      }
+      h2 {
+        font-size: 20px;
+      }
+      .gacha-box {
+        padding: 20px 15px;
+      }
     }
   </style>
-
-  <script>
-    const items = [
-      "幼馴染が突然の告白！？",
-      "魔法が暴発してとんでもない展開に…",
-      "雨の日に二人きりの部屋で…",
-      "ライバルとまさかの共闘！？"
-    ];
-
-    function rollGacha() {
-      const r = items[Math.floor(Math.random() * items.length)];
-      document.getElementById("result").textContent = r;
-    }
-  </script>
 </head>
 
 <body>
-  <h1>お題ガチャ</h1>
-  <p>ボタンを押してランダムお題をゲットしよう！</p>
+<header>シミュレーション（ガチャ）</header>
 
-  <button onclick="rollGacha()">ガチャを回す🎀</button>
+<main>
+  <h2>お題ガチャで遊ぶ</h2>
 
-  <div id="result"></div>
+  <!-- ===== ガチャ①：入力なし ===== -->
+  <div class="gacha-box">
+    <h3>インスピレーションお題ガチャ</h3>
 
-  <p style="margin-top:20px;">
-    <a href="index.html">← ホームに戻る</a>
-  </p>
+    <button onclick="gachaNoInput()">ガチャを回す</button>
+
+    <div class="result" id="result1"></div>
+  </div>
+
+  <!-- ===== ガチャ②：入力1つ ===== -->
+  <div class="gacha-box">
+    <h3>名前入りシチュエーションガチャ</h3>
+
+    <div class="inputs">
+      <input type="text" id="name1" placeholder="名前を入力">
+    </div>
+
+    <button onclick="gachaOneInput()">ガチャを回す</button>
+
+    <div class="result" id="result2"></div>
+  </div>
+
+  <!-- ===== ガチャ③：入力2つ ===== -->
+  <div class="gacha-box">
+    <h3>関係性お題ガチャ</h3>
+
+    <div class="inputs">
+      <input type="text" id="nameA" placeholder="名前A">
+      <input type="text" id="nameB" placeholder="名前B">
+    </div>
+
+    <button onclick="gachaTwoInput()">ガチャを回す</button>
+
+    <div class="result" id="result3"></div>
+  </div>
+</main>
+
+<script>
+  /* ===== 共通関数 ===== */
+  function rand(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  /* ===== ガチャ①（入力なし） ===== */
+  const theme = [
+    "雨の日",
+    "夜明け前",
+    "文化祭の帰り",
+    "世界が終わる10分前",
+    "誰もいない遊園地"
+  ];
+
+  const action = [
+    "告白する",
+    "秘密を打ち明ける",
+    "逃げ出す",
+    "手を取る",
+    "真実を知る"
+  ];
+
+  function gachaNoInput() {
+    document.getElementById("result1").textContent =
+      rand(theme) + "に、" + rand(action);
+  }
+
+  /* ===== ガチャ②（入力1つ） ===== */
+  const situation1 = [
+    "突然異世界に飛ばされた",
+    "記憶を失った",
+    "運命の人と再会した",
+    "最悪の選択を迫られる"
+  ];
+
+  function gachaOneInput() {
+    const name = document.getElementById("name1").value || "あなた";
+    document.getElementById("result2").textContent =
+      name + "は、" + rand(situation1);
+  }
+
+  /* ===== ガチャ③（入力2つ） ===== */
+  const relation = [
+    "敵同士",
+    "幼なじみ",
+    "偽りの恋人",
+    "主従関係",
+    "赤の他人"
+  ];
+
+  const event = [
+    "同じ夢を見る",
+    "一つの秘密を共有する",
+    "別れを選ぶ",
+    "世界を救う役目を負う"
+  ];
+
+  function gachaTwoInput() {
+    const a = document.getElementById("nameA").value || "A";
+    const b = document.getElementById("nameB").value || "B";
+    document.getElementById("result3").textContent =
+      a + "と" + b + "は" + rand(relation) + "で、" + rand(event);
+  }
+</script>
 </body>
 </html>
+
