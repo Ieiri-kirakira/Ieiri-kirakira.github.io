@@ -260,6 +260,24 @@
   <div id="view-counter-box">
     👀 <span id="view-counter">0</span> views
   </div>
+  <div id="gacha-list"></div>
+
+<script src="gacha-data.js"></script>
+<script>
+const list = document.getElementById("gacha-list");
+
+GACHAS.forEach(g => {
+  const div = document.createElement("div");
+  div.className = "gacha-card";
+  div.innerHTML = `
+    <h2>${g.title}</h2>
+    <p>${g.description}</p>
+    <a href="gacha.html?id=${g.id}">回す</a>
+  `;
+  list.appendChild(div);
+});
+</script>
+
 
 </body>
 </html>
