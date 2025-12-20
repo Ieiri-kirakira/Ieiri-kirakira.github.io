@@ -40,6 +40,23 @@ button:hover{opacity:.85}
   font-size:15px;
 }
 .hidden{display:none}
+  .result-box {
+  margin-top: 30px;
+  padding: 25px;
+  background: linear-gradient(135deg, #fff1f8, #fce4ec);
+  border: 2px solid #e91e63;
+  border-radius: 12px;
+  font-size: 1.2em;
+  line-height: 1.8;
+  box-shadow: 0 0 20px rgba(233,30,99,0.3);
+  animation: pop 0.4s ease;
+}
+
+@keyframes pop {
+  from { transform: scale(0.95); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
 </style>
 </head>
 
