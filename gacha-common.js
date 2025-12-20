@@ -8,4 +8,12 @@ function drawGacha(gacha, inputs) {
   gacha.count++;
   return result;
 }
+  function saveGachas(gachas) {
+  localStorage.setItem("gachas", JSON.stringify(gachas));
+}
+
+function loadGachas() {
+  return JSON.parse(localStorage.getItem("gachas")) || GACHAS;
+}
+
 </script>
