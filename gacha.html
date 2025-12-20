@@ -1,7 +1,20 @@
-<div class="tabs">
-  <button onclick="showTab('play')">🎲 ガチャ</button>
-  <button onclick="showTab('admin')">🛠 管理</button>
-</div>
+<h2>🛠 ガチャ管理</h2>
+
+<label>ガチャID（英数字・一意）</label><br>
+<input id="gid" placeholder="example-gacha"><br><br>
+
+<label>タイトル</label><br>
+<input id="gtitle" placeholder="○○ガチャ"><br><br>
+
+<label>説明</label><br>
+<textarea id="gdesc" placeholder="どんなガチャか"></textarea><br><br>
+
+<label>スロット（1行＝1ネタ）</label><br>
+<textarea id="gslots" rows="10"
+placeholder="1. {name1}と{name2}が〜
+2. ○○な{name1}は…"></textarea><br><br>
+
+<button onclick="saveFromAdmin()">💾 保存</button>
 
 <div id="tab-play">
   <!-- ガチャを回すUI -->
