@@ -211,6 +211,13 @@ window.saveFromAdmin = async () => {
   await saveGacha(gacha);
   alert("保存＆即反映されました");
 };
+    window.showTab = (tab) => {
+  document.getElementById("tab-play").style.display =
+    tab === "play" ? "block" : "none";
+  document.getElementById("tab-admin").style.display =
+    tab === "admin" ? "block" : "none";
+};
+
 </script>
 
 
