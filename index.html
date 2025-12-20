@@ -278,6 +278,26 @@ GACHAS.forEach(g => {
 });
 </script>
 
+<div id="gacha-list"></div>
+
+<script type="module">
+import { loadGachas } from "./firebase.js";
+
+const list = document.getElementById("gacha-list");
+
+const gachas = await loadGachas();
+
+gachas.forEach(g => {
+  const div = document.createElement("div");
+  div.className = "gacha-card";
+  div.innerHTML = `
+    <h3>${g.title}</h3>
+    <p>${g.description}</p>
+    <a href="gacha.html?id=${g.id}">回す</a>
+  `;
+  list.appendChild(div);
+});
+</script>
 
 </body>
 </html>
