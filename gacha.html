@@ -163,6 +163,43 @@ load();
 </script>
   <script src="gacha-data.js"></script>
 <script src="gacha-common.js"></script>
+<div id="result" class="result-box"></div>
+
+  <script type="module">
+import { loadGachas, saveGacha } from "./firebase.js";
+
+const params = new URLSearchParams(location.search);
+const gachaId = params.get("id");
+
+/* 回す側 */
+if (gachaId) {
+  const gachas = await loadGachas();
+  const g = gachas.find(v => v.id === gachaId);
+
+  window.spin = () => {
+    const text =
+      g.slots[Math.floor(Math.random() * g.slots.length)]
+        .replaceAll("{name1}", name1.value)
+        .replaceAll("{name2}", name2.value);
+
+    result.textContent = text;
+  };
+}
+
+/* 管理側：保存 */
+window.saveFromAdmin = async () => {
+  const gacha = {
+    id: document.getElementById("gid").value,
+    title: document.getElementById("gtitle").value,
+    description: document.getElementById("gdesc").value,
+    slots: document.getElementById("gslots")
+      .value.split("\n").filter(v => v.trim())
+  };
+
+  await saveGacha(gacha);
+  alert("保存＆即反映されました");
+};
+</script>
 
 
 </body>
