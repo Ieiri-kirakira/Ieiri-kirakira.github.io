@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>お題ガチャ</title>
+<title>🎀 お題ガチャ</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -13,6 +13,7 @@ body{
   padding:20px;
 }
 h1{color:#d6007f}
+
 .box{
   background:#fff;
   border:2px solid #ffb6d9;
@@ -20,6 +21,7 @@ h1{color:#d6007f}
   padding:15px;
   margin-bottom:20px;
 }
+
 textarea,input,button{
   width:100%;
   box-sizing:border-box;
@@ -27,6 +29,7 @@ textarea,input,button{
   padding:8px;
   font-size:14px;
 }
+
 button{
   background:#ff7eb9;
   color:#fff;
@@ -34,21 +37,31 @@ button{
   border-radius:8px;
   cursor:pointer;
 }
-button:disabled{opacity:.5}
 button:hover{opacity:.85}
-.result-box{
-  margin-top:20px;
-  padding:20px;
-  background:#fff1f8;
-  border:2px solid #e91e63;
-  border-radius:12px;
-  font-size:1.2em;
-  line-height:1.8;
+
+#gachaList button{
+  margin-bottom:6px;
 }
+
+.result-box {
+  margin-top: 20px;
+  padding: 25px;
+  background: linear-gradient(135deg, #fff1f8, #fce4ec);
+  border: 2px solid #e91e63;
+  border-radius: 12px;
+  font-size: 1.2em;
+  line-height: 1.8;
+  box-shadow: 0 0 20px rgba(233,30,99,0.3);
+  animation: pop 0.4s ease;
+  white-space: pre-wrap;
+}
+
+@keyframes pop {
+  from { transform: scale(0.95); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
 .hidden{display:none}
-.gacha-btn{
-  margin-bottom:5px;
-}
 </style>
 </head>
 
@@ -56,150 +69,102 @@ button:hover{opacity:.85}
 
 <h1>🎀 お題ガチャ</h1>
 
-<!-- ========= 回す側 ========= -->
 <div class="box">
-  <h3>ユーザー入力</h3>
-  <input id="name1" placeholder="name1（任意）">
-  <input id="name2" placeholder="name2（任意）">
+  <h3>👤 ユーザー入力</h3>
+  <input id="name1" placeholder="name1">
+  <input id="name2" placeholder="name2">
 </div>
 
 <div class="box">
-  <h3>ガチャ一覧</h3>
-  <div id="gachaList">読み込み中…</div>
+  <h3>🎰 ガチャ一覧</h3>
+  <div id="gachaList"></div>
 </div>
 
 <div class="box">
-  <h3 id="currentTitle">ガチャを選んでください</h3>
+  <h3 id="currentGachaTitle">ガチャを選んでください</h3>
   <button id="spinBtn" disabled>ガチャを回す</button>
   <div id="result" class="result-box"></div>
 </div>
 
-<!-- ========= 管理画面 ========= -->
+<hr>
+
 <div class="box">
-  <h3>🔒 管理画面</h3>
-  <button id="adminBtn">管理モードに入る</button>
+  <h3>🛠 管理画面</h3>
 
-  <div id="adminArea" class="hidden">
-    <label>ガチャID（英数字・一意）</label>
-    <input id="gid" placeholder="example-gacha">
+  <label>ガチャID（英数字・一意）</label>
+  <input id="gid" placeholder="example-gacha">
 
-    <label>タイトル</label>
-    <input id="gtitle" placeholder="○○ガチャ">
+  <label>タイトル</label>
+  <input id="gtitle" placeholder="○○ガチャ">
 
-    <label>説明</label>
-    <textarea id="gdesc"></textarea>
+  <label>説明</label>
+  <textarea id="gdesc"></textarea>
 
-    <label>スロット（1行＝1ネタ / 番号OK）</label>
-    <textarea id="gslots" rows="10"
+  <label>スロット（1行＝1ネタ）</label>
+  <textarea id="gslots" rows="10"
 placeholder="1. {name1}と{name2}が〜
 2. ○○な{name1}は…"></textarea>
 
-    <button id="saveBtn">💾 保存</button>
-    <p id="adminMsg"></p>
-  </div>
+  <button onclick="saveFromAdmin()">💾 保存</button>
 </div>
 
-<!-- ========= Firebase & JS ========= -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  doc,
-  getDoc,
-  setDoc
-} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+import { loadGachas, saveGacha } from "./firebase.js";
 
-/* 🔧 Firebase設定（そのまま使ってOK） */
-const firebaseConfig = {
-  apiKey: "AIzaSyALFENQ3JKa5DX9z8ukWKMQM5vlpY0x8w4",
-  authDomain: "gacha-5e317.firebaseapp.com",
-  projectId: "gacha-5e317",
-};
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+let gachas = [];
+let current = null;
 
-/* ========= 状態 ========= */
-let currentGacha = null;
-
-/* ========= 一覧読み込み ========= */
-async function loadGachaList(){
+async function init(){
+  gachas = await loadGachas();
   const list = document.getElementById("gachaList");
   list.innerHTML = "";
 
-  const snap = await getDocs(collection(db,"gachas"));
-  if(snap.empty){
-    list.textContent = "ガチャが登録されてません";
-    return;
-  }
-
-  snap.forEach(d=>{
+  gachas.forEach(g => {
     const btn = document.createElement("button");
-    btn.className = "gacha-btn";
-    btn.textContent = d.data().title || d.id;
-    btn.onclick = ()=>selectGacha(d.id);
+    btn.textContent = g.title;
+    btn.onclick = () => selectGacha(g);
     list.appendChild(btn);
   });
 }
 
-/* ========= ガチャ選択 ========= */
-async function selectGacha(id){
-  const ref = doc(db,"gachas",id);
-  const snap = await getDoc(ref);
-  if(!snap.exists()) return;
-
-  currentGacha = snap.data();
-  document.getElementById("currentTitle").textContent =
-    currentGacha.title;
+function selectGacha(g){
+  current = g;
+  document.getElementById("currentGachaTitle").textContent = g.title;
   document.getElementById("spinBtn").disabled = false;
 }
 
-/* ========= 回す ========= */
-document.getElementById("spinBtn").onclick = ()=>{
-  if(!currentGacha) return;
+document.getElementById("spinBtn").onclick = () => {
+  if(!current || !current.slots.length){
+    result.textContent = "お題がありません";
+    return;
+  }
+
   const n1 = name1.value || "";
   const n2 = name2.value || "";
-  const slot =
-    currentGacha.slots[
-      Math.floor(Math.random()*currentGacha.slots.length)
-    ]
-    .replaceAll("{name1}",n1)
-    .replaceAll("{name2}",n2);
-  result.textContent = slot;
+
+  const text = current.slots[
+    Math.floor(Math.random() * current.slots.length)
+  ]
+    .replaceAll("{name1}", n1)
+    .replaceAll("{name2}", n2);
+
+  result.textContent = text;
 };
 
-/* ========= 管理 ========= */
-adminBtn.onclick = ()=>{
-  const pw = prompt("管理者パスワード");
-  if(pw !== "IEIRI_ADMIN_405"){
-    alert("パスワードが違います");
-    return;
-  }
-  adminArea.classList.remove("hidden");
-};
-
-saveBtn.onclick = async ()=>{
-  const id = gid.value.trim();
-  if(!id){
-    alert("ガチャID必須");
-    return;
-  }
+window.saveFromAdmin = async () => {
   const gacha = {
+    id: gid.value,
     title: gtitle.value,
     description: gdesc.value,
-    slots: gslots.value
-      .split("\n")
-      .map(v=>v.replace(/^\d+[\.\、]?\s*/,"").trim())
-      .filter(v=>v)
+    slots: gslots.value.split("\n").filter(v => v.trim())
   };
-  await setDoc(doc(db,"gachas",id),gacha);
-  adminMsg.textContent = "保存＆即反映されました";
-  loadGachaList();
+
+  await saveGacha(gacha);
+  alert("保存＆即反映されました");
+  init();
 };
 
-/* ========= 起動 ========= */
-loadGachaList();
+init();
 </script>
 
 </body>
