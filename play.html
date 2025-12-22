@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>🎲 ガチャ</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{
+  font-family: "Noto Serif JP", serif;
+  background:#fff0f7;
+  padding:20px;
+}
+.box{
+  background:#fff;
+  border:2px solid #ffb6d9;
+  border-radius:14px;
+  padding:15px;
+  margin-bottom:20px;
+}
+input,button{
+  width:100%;
+  margin:6px 0;
+  padding:10px;
+  font-size:15px;
+}
+button{
+  background:#ff7eb9;
+  color:#fff;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+}
+button:hover{opacity:.85}
+.result{
+  margin-top:25px;
+  padding:25px;
+  background:linear-gradient(135deg,#fff1f8,#fce4ec);
+  border:2px solid #e91e63;
+  border-radius:14px;
+  font-size:1.4em;
+  font-weight:700; /* ← 文字太くしてる */
+  line-height:1.9;
+  box-shadow:0 0 20px rgba(233,30,99,.3);
+}
+</style>
+</head>
+<body>
+
+<button onclick="location.href='index.html'">← 一覧に戻る</button>
+
+<h2 id="title">ガチャ</h2>
+<p id="desc"></p>
+
+<div class="box">
+  <input id="name1" placeholder="name1">
+  <input id="name2" placeholder="name2">
+  <button id="spin">ガチャを回す</button>
+</div>
+
+<div id="result" class="result"></div>
+
+<script type="module">
+import { loadGachas } from "./firebase.js";
+
+const params = new URLSearchParams(location.search);
+const id = params.get("id");
+const gachas = await loadGachas();
+const gacha = gachas.find(g => g.id === id);
+
+if (!gacha) {
+  document.body.innerHTML = "ガチャが見つかりません";
+}
+
+title.textContent = gacha.title;
+desc.textContent = gacha.description || "";
+
+spin.onclick = () => {
+  const base =
+    gacha.slots[Math.floor(Math.random() * gacha.slots.length)];
+  const text = base
+    .replaceAll("{name1}", name1.value || "")
+    .replaceAll("{name2}", name2.value || "");
+  result.textContent = text;
+};
+</script>
+
+</body>
+</html>
